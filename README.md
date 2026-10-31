@@ -76,9 +76,9 @@ Dynamic vector (SVG) plots with live policy shock sliders and instant `.svg` vec
 
 Senior transformation strategist and systems architect specializing in quantitative policy modeling, biometric and AI operational governance, and executive decision-support systems.
 
-* **The Modern Front Desk Simulator:**.[https://kalliopi-papadopoulou.github.io/modern-front-desk-simulator/].(https://kalliopi-papadopoulou.github.io/modern-front-desk-simulator/).
+* **The Modern Front Desk Simulator:**.[https://kalliopi-papadopoulou.github.io/modern-front-desk-simulator/](https://kalliopi-papadopoulou.github.io/modern-front-desk-simulator/)
 * **Executive Strategic Studio:** [https://kalliopi-papadopoulou.github.io/kalliopi-papadopoulou-strategic-studio/](https://kalliopi-papadopoulou.github.io/kalliopi-papadopoulou-strategic-studio/)
-* **C-suiteNotepad:** .[https://kalliopi-papadopoulou.github.io/c-suite-pocket-notepad/].(https://kalliopi-papadopoulou.github.io/c-suite-pocket-notepad/) 
+* **C-suiteNotepad:** .[https://kalliopi-papadopoulou.github.io/c-suite-pocket-notepad/](https://kalliopi-papadopoulou.github.io/c-suite-pocket-notepad/)
 * * **Live PoliEcon Quantitative machine and Interactive HUD:** [https://kalliopi-papadopoulou.github.io/Pocket_C-SuitePoliecon_Notepad/](https://kalliopi-papadopoulou.github.io/Pocket_C-SuitePoliecon_Notepad/)
 * **GitHub Profile:** [@kalliopi-papadopoulou](https://github.com/kalliopi-papadopoulou)
 
