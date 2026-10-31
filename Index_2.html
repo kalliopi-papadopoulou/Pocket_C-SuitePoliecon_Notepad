@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>Pocket_C-SuitePoliecon_Notepad // Kalliopi Papadopoulou</title>
+  <style>
+    :root {
+      --bg-0: #060911; --bg-1: #0b111e; --bg-2: #111a2e; --bg-3: #17233b;
+      --gold: #f5b041; --gold-bright: #ffbe2e; --gold-dim: rgba(245, 176, 65, 0.14);
+      --cyan: #00e5ff; --emerald: #10b981; --crimson: #f43f5e; --violet: #a78bfa;
+      --text-main: #f1f5f9; --text-dim: #94a3b8; --border: #1e2d4a;
+      --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg-0); color: var(--text-main); font-family: var(--font-sans); line-height: 1.5; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+    header.kp-header { background: linear-gradient(180deg, #090e1a 0%, #060911 100%); border-bottom: 1px solid var(--border); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; position: sticky; top: 0; z-index: 200; box-shadow: 0 6px 24px rgba(0,0,0,0.75); }
+    .kp-identity { display: flex; align-items: center; gap: 12px; }
+    .kp-monogram { width: 44px; height: 44px; border-radius: 10px; background: linear-gradient(135deg, #f5b041 0%, #d48817 100%); color: #060911; font-family: Georgia, serif; font-weight: 900; font-size: 19px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 14px rgba(245,176,65,0.35); flex-shrink: 0; }
+    .kp-titles h1 { font-family: Georgia, serif; font-size: 15px; font-weight: 700; letter-spacing: 0.7px; color: #fff; text-transform: uppercase; }
+    .kp-subtitles { font-size: 11px; color: var(--gold); font-weight: 500; line-height: 1.35; margin-top: 2px; }
+    .machine-toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .machine-pill { background: rgba(0,229,255,0.08); border: 1px solid var(--cyan); color: var(--cyan); font-family: var(--font-mono); font-size: 10.5px; padding: 5px 9px; border-radius: 6px; }
+    .gold-btn { background: linear-gradient(135deg, #ffbe2e 0%, #e09612 100%); color: #060911 !important; border: none; font-family: var(--font-sans); font-weight: 800; font-size: 11px; letter-spacing: 0.4px; padding: 8px 13px; border-radius: 7px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 5px; text-transform: uppercase; white-space: nowrap; }
+    .outline-btn { background: var(--bg-2); color: var(--gold); border: 1px solid var(--gold); font-family: var(--font-mono); font-size: 10.5px; font-weight: 600; padding: 6px 10px; border-radius: 6px; cursor: pointer; white-space: nowrap; }
+
+    .sub-bar { background: var(--bg-1); border-bottom: 1px solid var(--border); padding: 9px 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .jurisdiction-group { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+    .jurisdiction-label { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-dim); text-transform: uppercase; margin-right: 2px; }
+    .jur-btn { background: var(--bg-0); border: 1px solid var(--border); color: var(--text-dim); font-family: var(--font-mono); font-size: 10.5px; padding: 5px 9px; border-radius: 5px; cursor: pointer; transition: all 0.2s; }
+    .jur-btn.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); font-weight: 700; }
+
+    /* EU SUPRANATIONAL & 27 MEMBER-STATE DISPERSION BAR */
+    .eu-dispersion-bar { background: linear-gradient(180deg, #080f1d 0%, #050912 100%); border-bottom: 1px solid var(--border); padding: 8px 16px; display: none; flex-direction: column; gap: 7px; }
+    .eu-dispersion-bar.active { display: flex; }
+    .eu-disp-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .eu-disp-title { font-family: var(--font-mono); font-size: 10px; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; }
+    .eu-disp-summary { font-family: var(--font-mono); font-size: 10px; color: var(--gold); background: rgba(245,176,65,0.08); border: 1px solid rgba(245,176,65,0.3); padding: 2px 8px; border-radius: 4px; }
+    .eu-member-pills { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+    .eu-ms-btn { background: var(--bg-1); border: 1px solid #1a2742; color: var(--text-dim); font-family: var(--font-mono); font-size: 9.5px; padding: 3px 7px; border-radius: 4px; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+    .eu-ms-btn:hover { border-color: var(--cyan); color: #fff; }
+    .eu-ms-btn.active { background: rgba(0,229,255,0.14); border-color: var(--cyan); color: var(--cyan); font-weight: 700; box-shadow: 0 0 8px rgba(0,229,255,0.2); }
+    .eu-ms-btn.supranational.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
+    .eu-ms-btn.bg-new { border-color: rgba(16,185,129,0.5); }
+    .eu-ms-btn.bg-new.active { background: rgba(16,185,129,0.18); border-color: var(--emerald); color: var(--emerald); }
+
+    /* LOWERCASE SOURCE ATTRIBUTION BENEATH CURRENT VALUES */
+    .src-sub { display: block; font-family: var(--font-mono); font-size: 9px; color: var(--text-dim); text-transform: lowercase; letter-spacing: 0.2px; line-height: 1.15; margin-top: 2px; font-weight: 400; opacity: 0.85; }
+    .tk-item { display: flex; flex-direction: column; align-items: flex-start; background: rgba(17,26,46,0.55); border: 1px solid rgba(30,45,74,0.7); padding: 3px 8px; border-radius: 5px; }
+    .tk-item-top { font-family: var(--font-mono); font-size: 11px; white-space: nowrap; }
+    .tk-item span.val { color: var(--emerald); font-weight: 700; }
+    .tk-item span.gold { color: var(--gold); font-weight: 700; }
+    .live-ticker { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; flex-wrap: wrap; }
+    .sync-status { font-size: 10px; padding: 4px 8px; border-radius: 4px; background: rgba(16,185,129,0.14); border: 1px solid var(--emerald); color: var(--emerald); font-weight: 700; display: flex; flex-direction: column; align-items: center; line-height: 1.2; }
+
+    nav.tabs { display: flex; background: var(--bg-1); border-bottom: 1px solid var(--border); padding: 0 12px; gap: 2px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .tab-btn { background: transparent; border: none; color: var(--text-dim); font-family: var(--font-mono); font-size: 11px; padding: 12px 13px; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; }
+    .tab-btn.active { color: var(--gold); border-bottom: 2px solid var(--gold); background: var(--gold-dim); font-weight: 700; }
+
+    .tab-panel { display: none; padding: 16px; max-width: 1620px; width: 100%; margin: 0 auto; flex: 1; }
+    .tab-panel.active { display: block; }
+    .split-layout { display: grid; grid-template-columns: 300px 1fr; gap: 16px; }
+    @media (max-width: 980px) { .split-layout { grid-template-columns: 1fr; } }
+    .item-list { background: var(--bg-1); border: 1px solid var(--border); border-radius: 8px; max-height: 72vh; overflow-y: auto; }
+    @media (max-width: 980px) { .item-list { max-height: 250px; } }
+    .item-list-header { padding: 10px 14px; background: var(--bg-2); border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: 10.5px; color: var(--gold); text-transform: uppercase; position: sticky; top: 0; z-index: 10; }
+    .selector-btn { width: 100%; text-align: left; padding: 10px 14px; background: transparent; border: none; border-bottom: 1px solid rgba(30,45,74,0.55); color: var(--text-main); font-size: 12.5px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .selector-btn.active { background: var(--gold-dim); border-left: 3px solid var(--gold); color: #fff; font-weight: 600; }
+    .selector-tag { font-family: var(--font-mono); font-size: 9.5px; color: var(--gold); background: var(--bg-0); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(245,176,65,0.3); white-space: nowrap; }
+
+    .hud-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 16px; transition: box-shadow 0.3s, border-color 0.3s; }
+    .hud-flash { border-color: var(--gold) !important; box-shadow: 0 0 24px rgba(245,176,65,0.5) !important; }
+    .hud-card-title { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 11px; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
+    .hud-card-title h2 { font-size: 17px; color: #fff; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    @media (max-width: 960px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+
+    .taxonomy-toggle-bar { background: linear-gradient(90deg, rgba(167,139,250,0.12) 0%, rgba(245,176,65,0.1) 100%); border: 1px solid var(--violet); border-radius: 7px; padding: 8px 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .taxonomy-toggle-title { font-family: var(--font-mono); font-size: 10.5px; color: var(--violet); font-weight: 700; }
+    .tax-switch-btn { background: var(--bg-0); border: 1px solid var(--violet); color: var(--violet); font-family: var(--font-mono); font-size: 10px; padding: 3px 10px; border-radius: 99px; cursor: pointer; font-weight: 700; }
+    .tax-switch-btn.on { background: var(--violet); color: #060911; }
+    .taxonomy-drawer { display: none; background: #080d18; border: 1px solid var(--violet); border-radius: 7px; padding: 12px; margin-bottom: 14px; }
+    .taxonomy-drawer.open { display: block; }
+    .tax-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    @media (max-width: 768px) { .tax-grid { grid-template-columns: 1fr; } }
+    .tax-cell { background: var(--bg-1); border-left: 3px solid var(--gold); padding: 8px 10px; border-radius: 4px; }
+    .tax-cell span.lbl { display: block; font-family: var(--font-mono); font-size: 9.5px; color: var(--gold); text-transform: uppercase; margin-bottom: 2px; }
+    .tax-cell p { font-size: 12px; color: var(--text-main); }
+
+    .formula-banner { background: var(--bg-0); border: 1px solid var(--cyan); padding: 10px 13px; border-radius: 6px; font-family: var(--font-mono); font-size: 12.5px; color: var(--cyan); margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
+    .control-group { margin-bottom: 10px; background: var(--bg-2); padding: 9px 12px; border-radius: 6px; border: 1px solid var(--border); }
+    .control-group label { display: flex; justify-content: space-between; align-items: flex-start; font-size: 11.5px; font-family: var(--font-mono); color: var(--text-dim); margin-bottom: 5px; gap: 6px; }
+    .val-stack { text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
+    .control-group label span.val-display { color: var(--gold); font-weight: 700; }
+    input[type="range"] { width: 100%; accent-color: var(--gold); cursor: pointer; }
+    .hud-readout-box { background: var(--bg-0); border: 1px solid var(--emerald); border-radius: 8px; padding: 14px; text-align: center; margin-bottom: 12px; }
+    .hud-readout-label { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+    .hud-readout-value { font-family: var(--font-mono); font-size: 25px; font-weight: 800; color: var(--emerald); margin: 4px 0 2px 0; }
+    .hud-verdict { font-family: var(--font-mono); font-size: 11.5px; color: var(--gold); padding: 8px 10px; background: var(--gold-dim); border-left: 3px solid var(--gold); text-align: left; margin-top: 8px; }
+    .info-box { background: var(--bg-2); border: 1px solid var(--border); border-radius: 7px; padding: 12px 14px; margin-bottom: 10px; }
+    .info-box h4 { font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase; color: var(--cyan); letter-spacing: 0.6px; margin-bottom: 4px; }
+    .info-box p { font-size: 12.5px; color: var(--text-main); }
+    .svg-hud-container { background: #04070e; border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; align-items: center; }
+    svg.hud-plot { width: 100%; max-width: 550px; height: auto; aspect-ratio: 460 / 320; background: linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px); background-size: 28px 28px; border: 1px solid #16243d; }
+    .search-bar, .form-input, select.form-select { width: 100%; padding: 9px 11px; background: var(--bg-0); border: 1px solid var(--border); color: #fff; font-family: var(--font-mono); font-size: 11.5px; border-radius: 6px; }
+    .ind-edit-input { background: var(--bg-0); border: 1px solid var(--gold); color: var(--emerald); font-family: var(--font-mono); font-size: 12px; font-weight: 700; padding: 3px 7px; border-radius: 4px; width: 145px; text-align: right; }
+    table.hud-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+    table.hud-table th, table.hud-table td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; }
+    table.hud-table th { background: var(--bg-2); color: var(--gold); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; }
+
+    .scenario-command-deck { background: linear-gradient(180deg, #101a2e 0%, #090f1d 100%); border: 1px solid var(--gold); border-radius: 10px; padding: 15px; margin-bottom: 18px; }
+    .scenario-banner { background: var(--bg-0); border-left: 4px solid var(--cyan); border-radius: 6px; padding: 11px 13px; margin-top: 10px; }
+    .th-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+    .th-pill { background: var(--bg-0); border: 1px solid var(--border); color: var(--text-dim); font-family: var(--font-mono); font-size: 10.5px; padding: 6px 11px; border-radius: 99px; cursor: pointer; }
+    .th-pill.active { background: var(--gold); color: #060911; border-color: var(--gold); font-weight: 800; }
+    .th-section { background: var(--bg-1); border: 1px solid var(--border); border-radius: 10px; padding: 15px; margin-bottom: 16px; }
+    .dim-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 10px 0 14px 0; }
+    @media (max-width: 1024px) { .dim-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .dim-grid { grid-template-columns: 1fr; } }
+    .dim-box { background: #070c16; border: 1px solid #1c2b46; border-top: 3px solid var(--cyan); border-radius: 6px; padding: 10px 12px; }
+    .dim-box h5 { font-family: var(--font-mono); font-size: 10px; color: var(--cyan); text-transform: uppercase; margin-bottom: 4px; }
+    .dim-box p { font-size: 12px; color: var(--text-main); }
+
+    .artifact-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-top: 10px; }
+    .artifact-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; }
+    .artifact-card-top { display: flex; flex-direction: column; gap: 6px; }
+    .artifact-meta-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .badge-type { font-family: var(--font-mono); font-size: 9.5px; font-weight: 700; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; white-space: nowrap; display: inline-block; }
+    .badge-METRIC { background: rgba(0,229,255,0.14); color: var(--cyan); border: 1px solid var(--cyan); }
+    .badge-CURVE { background: rgba(245,176,65,0.14); color: var(--gold); border: 1px solid var(--gold); }
+    .badge-LAW { background: rgba(167,139,250,0.14); color: var(--violet); border: 1px solid var(--violet); }
+    .badge-INDICATOR { background: rgba(16,185,129,0.14); color: var(--emerald); border: 1px solid var(--emerald); }
+    .theory-tag-inline { font-family: var(--font-mono); font-size: 10.5px; color: var(--violet); font-weight: 600; }
+    .artifact-spec-box { font-family: var(--font-mono); font-size: 11.5px; color: var(--cyan); background: var(--bg-0); padding: 6px 9px; border-radius: 5px; border: 1px solid #16233b; word-break: break-word; }
+    .artifact-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid rgba(30,45,74,0.7); gap: 8px; }
+    .launch-hud-btn { background: linear-gradient(135deg, #ffbe2e 0%, #e09612 100%); color: #060911 !important; border: none; font-family: var(--font-mono); font-weight: 800; font-size: 10.5px; padding: 6px 12px; border-radius: 6px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap; }
+
+    footer.kp-footer { background: #05080f; border-top: 1px solid var(--border); padding: 16px 20px; margin-top: auto; text-align: center; font-size: 12px; color: var(--text-dim); }
+  </style>
+</head>
+<body>
+
+<header class="kp-header">
+  <div class="kp-identity">
+    <div class="kp-monogram">KP</div>
+    <div class="kp-titles">
+      <h1>KALLIOPI PAPADOPOULOU</h1>
+      <div class="kp-subtitles">
+        Macroeconomic Strategy &bull; C-Suite Advisory<br/>
+        Quantitative Finance &bull; AI Architecture
+      </div>
+    </div>
+  </div>
+  <div class="machine-toolbar">
+    <span class="machine-pill">MACHINE // Pocket_C-SuitePoliecon_Notepad</span>
+    <button class="outline-btn" id="masterTaxBtn" onclick="toggleMasterTaxonomy()">TAXONOMY EXTENSION: ON</button>
+    <button class="gold-btn" onclick="exportFullExecutiveDossier()">EXPORT DOSSIER</button>
+  </div>
+</header>
+
+<div class="sub-bar">
+  <div class="jurisdiction-group">
+    <span class="jurisdiction-label">Region:</span>
+    <button class="jur-btn active" onclick="setJurisdiction('EU', this)">EU (SUPRANATIONAL &amp; 27 MS)</button>
+    <button class="jur-btn" onclick="setJurisdiction('US', this)">UNITED STATES (FED)</button>
+    <button class="jur-btn" onclick="setJurisdiction('CH', this)">SWITZERLAND (SNB)</button>
+    <button class="jur-btn" onclick="setJurisdiction('UK', this)">UNITED KINGDOM (BoE)</button>
+    <button class="jur-btn" onclick="setJurisdiction('JP', this)">JAPAN (BoJ)</button>
+    <button class="jur-btn" onclick="setJurisdiction('SG', this)">SINGAPORE (MAS)</button>
+  </div>
+  <div class="live-ticker">
+    <div class="sync-status">
+      <span id="syncBadge">2026-10-30</span>
+      <span class="src-sub" style="color:var(--emerald);font-size:8.5px;">src: ecb / frankfurter daily sync</span>
+    </div>
+    <div class="tk-item">
+      <div class="tk-item-top">DXY: <span class="val" id="tk-dxy">102.19</span></div>
+      <span class="src-sub" id="src-tk-dxy">src: ice futures / fed h.10</span>
+    </div>
+    <div class="tk-item">
+      <div class="tk-item-top">EUR/USD: <span class="val" id="tk-eur">1.1146</span></div>
+      <span class="src-sub" id="src-tk-eur">src: ecb eurofxref / frankfurter</span>
+    </div>
+    <div class="tk-item">
+      <div class="tk-item-top">USD/JPY: <span class="val" id="tk-jpy">157.97</span></div>
+      <span class="src-sub" id="src-tk-jpy">src: boj tokyo spot / ecb</span>
+    </div>
+    <div class="tk-item">
+      <div class="tk-item-top">USD/SGD: <span class="val" id="tk-sgd">1.3210</span></div>
+      <span class="src-sub" id="src-tk-sgd">src: mas s$neer / frankfurter</span>
+    </div>
+    <div class="tk-item">
+      <div class="tk-item-top">10Y: <span class="gold" id="tk-10y">2.42%</span></div>
+      <span class="src-sub" id="src-tk-10y">src: ecb yield curve / eurostat</span>
+    </div>
+    <div class="tk-item">
+      <div class="tk-item-top">VIX: <span class="val" id="tk-vix">17.12</span></div>
+      <span class="src-sub" id="src-tk-vix">src: cboe vix / eurex vstoxx</span>
+    </div>
+    <div class="tk-item">
+      <div class="tk-item-top">EUA: <span class="gold" id="tk-eua">&euro;88.76</span></div>
+      <span class="src-sub" id="src-tk-eua">src: ice endex / eex eu ets</span>
+    </div>
+  </div>
+</div>
+
+<!-- EU SUPRANATIONAL & 27 MEMBER-STATE DISPERSION TOGGLE BAR (INCLUDING BULGARIA EUR 2026) -->
+<div class="eu-dispersion-bar active" id="euDispersionBar">
+  <div class="eu-disp-top">
+    <div class="eu-disp-title">
+      <span>EU Supranational &amp; Member-State Dispersion Toggles (27 MS + EU Aggregate):</span>
+    </div>
+    <div class="eu-disp-summary" id="euDispersionSummary">
+      MODE: EU SUPRANATIONAL AGGREGATE (ECB / EUROSTAT) &bull; 10Y SPREAD vs. BUND: +24 bps &bull; EUR AREA +21 (INCL. BULGARIA 2026)
+    </div>
+  </div>
+  <div class="eu-member-pills" id="euMemberPills"></div>
+</div>
+
+<nav class="tabs">
+  <button class="tab-btn active" id="tabbtn-metrics" onclick="switchTab('tab-metrics', this)">01 // METRICS &amp; FORMULAS (10)</button>
+  <button class="tab-btn" id="tabbtn-curves" onclick="switchTab('tab-curves', this)">02 // HUD DIAGRAMS &amp; CURVES (31)</button>
+  <button class="tab-btn" id="tabbtn-laws" onclick="switchTab('tab-laws', this)">03 // LAWS (11) &amp; INDICATORS (17)</button>
+  <button class="tab-btn" id="tabbtn-fx" onclick="switchTab('tab-fx', this)">04 // QUANT FINANCE &amp; FX TELEMETRY</button>
+  <button class="tab-btn" id="tabbtn-thematic" onclick="switchTab('tab-thematic', this)">05 // THEMATIC DECISION MATRIX</button>
+  <button class="tab-btn" id="tabbtn-calendar" onclick="switchTab('tab-calendar', this)">06 // RETAIN ADVISORY &amp; GOOGLE CALENDAR</button>
+</nav>
+
+<section id="tab-metrics" class="tab-panel active">
+  <div class="split-layout">
+    <div class="item-list">
+      <div class="item-list-header">Select Formula / Calculator (10)</div>
+      <div id="metricSelectorList"></div>
+    </div>
+    <div id="metricWorkspace"></div>
+  </div>
+</section>
+
+<section id="tab-curves" class="tab-panel">
+  <div class="split-layout">
+    <div class="item-list">
+      <div class="item-list-header">Select HUD Diagram / Curve (31)</div>
+      <div style="padding:8px;"><input type="text" class="search-bar" id="curveSearch" placeholder="Filter 31 diagrams or theories..." oninput="filterCurves()" /></div>
+      <div id="curveSelectorList"></div>
+    </div>
+    <div id="curveWorkspace"></div>
+  </div>
+</section>
+
+<section id="tab-laws" class="tab-panel">
+  <div class="hud-card" style="margin-bottom:14px;">
+    <div class="hud-card-title" style="margin-bottom:4px;padding-bottom:8px;">
+      <div>
+        <h2 id="jurIndicatorTitle">Sovereign &amp; Market Indicators // EU (ECB / EUROSTAT)</h2>
+        <p style="font-size:12px;color:var(--text-dim);">Automatically populated with each region or EU Member-State's daily defaults and institutional retrieval sources. Edit any field inline or reset to daily defaults.</p>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="outline-btn" onclick="resetRegionIndicators()">RESET DAILY DEFAULTS</button>
+        <button class="gold-btn" onclick="exportIndicatorsCSV()">EXPORT CSV</button>
+      </div>
+    </div>
+    <div id="euMemberDispersionBanner" style="display:none;margin-top:8px;padding:9px 12px;background:var(--bg-0);border:1px solid var(--cyan);border-radius:6px;font-family:var(--font-mono);font-size:11px;color:var(--cyan);"></div>
+  </div>
+  <div class="grid-2">
+    <div class="hud-card">
+      <div class="hud-card-title"><h2>17 Sovereign &amp; Market Indicators</h2><span class="selector-tag" id="jurBadgeTag">EU</span></div>
+      <div id="indicatorsContainer"></div>
+    </div>
+    <div class="hud-card">
+      <div class="hud-card-title"><h2>11 Foundational Economic Laws</h2><span class="selector-tag">EMPIRICAL CONSTRAINTS</span></div>
+      <div id="lawsContainer"></div>
+    </div>
+  </div>
+</section>
+
+<section id="tab-fx" class="tab-panel">
+  <div class="hud-card">
+    <div class="hud-card-title">
+      <div>
+        <h2>Quantitative Finance, Sovereign Yield &amp; FX Telemetry Desk</h2>
+        <p style="color:var(--text-dim);font-size:12.5px;">Daily ECB/Frankfurter spot synchronization correlated with Uncovered Interest Rate Parity (UIP) and Sovereign CDS spreads.</p>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="outline-btn" onclick="setJurisdiction(currentJurisdiction, document.querySelector('.jur-btn.active')); autoSyncAllTelemetry();">RESET DAILY DEFAULT</button>
+        <button class="gold-btn" onclick="exportFXBrief()">EXPORT FX BRIEF</button>
+      </div>
+    </div>
+    <div class="grid-3" id="fxTelemetryCards"></div>
+    <div class="grid-2" style="margin-top:16px;">
+      <div class="info-box">
+        <h4>Parameter Telemetry Inputs // Uncovered Interest Rate Parity (UIP)</h4>
+        <div class="formula-banner" style="font-size:12px;"><span>E(S_t+1) = S_t * [ (1 + i_dom) / (1 + i_for) ] + CDS_Risk_Premium</span></div>
+        <div class="control-group">
+          <label>Domestic Policy Rate (i_dom %)
+            <span class="val-stack"><span class="val-display" id="fx-idom-val">3.25%</span><span class="src-sub" id="src-fx-idom">src: ecb governing council</span></span>
+          </label>
+          <input type="range" min="-0.5" max="12" step="0.25" value="3.25" id="fx-idom" oninput="calcFXParity()">
+        </div>
+        <div class="control-group">
+          <label>Foreign Benchmark Rate (i_for - FED %)
+            <span class="val-stack"><span class="val-display" id="fx-ifor-val">4.75%</span><span class="src-sub" id="src-fx-ifor">src: federal reserve fomc</span></span>
+          </label>
+          <input type="range" min="0" max="12" step="0.25" value="4.75" id="fx-ifor" oninput="calcFXParity()">
+        </div>
+        <div class="control-group">
+          <label>Spot Rate (EUR/USD Reference)
+            <span class="val-stack"><span class="val-display" id="fx-spot-val">1.1146</span><span class="src-sub" id="src-fx-spot">src: ecb eurofxref / frankfurter</span></span>
+          </label>
+          <input type="range" min="0.85" max="1.40" step="0.0005" value="1.1146" id="fx-spot" oninput="calcFXParity()">
+        </div>
+        <div class="control-group">
+          <label>Sovereign 5Y CDS Spread (bps)
+            <span class="val-stack"><span class="val-display" id="fx-cds-val">32 bps</span><span class="src-sub" id="src-fx-cds">src: dtcc / s&p sovereign cds</span></span>
+          </label>
+          <input type="range" min="5" max="400" step="2" value="32" id="fx-cds" oninput="calcFXParity()">
+        </div>
+      </div>
+      <div>
+        <div class="hud-readout-box">
+          <div class="hud-readout-label">12M Implied Forward FX Rate &amp; Carry Differential</div>
+          <div class="hud-readout-value" id="fx-forward-out">1.1310</div>
+          <span class="src-sub" id="src-fx-forward" style="margin-bottom:6px;">src: uip model &bull; ecb / bis / dtcc telemetry</span>
+          <div id="fx-carry-spread" style="font-family:var(--font-mono);font-size:12px;color:var(--cyan);"></div>
+          <div class="hud-verdict" id="fx-verdict"></div>
+        </div>
+        <div class="info-box">
+          <h4>Macro-to-FX Policy Transmission Matrix</h4>
+          <table class="hud-table">
+            <thead><tr><th>Policy Lever / Metric</th><th>Immediate FX Impact</th><th>Bond Yield / VIX Channel</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Taylor Rule Hike (+50bps)</strong></td><td>Domestic FX appreciates via UIP inflow</td><td>2Y spikes; 10Y-2Y curve flattens</td></tr>
+              <tr><td><strong>Spending Multiplier Surge</strong></td><td>Short-run boost; twin-deficit drag if NX &lt; 0</td><td>Term premium rises; breakevens widen</td></tr>
+              <tr><td><strong>QE Balance Sheet Expansion</strong></td><td>Currency softens via portfolio balance channel</td><td>Compresses long-end sovereign spread</td></tr>
+              <tr><td><strong>Carbon Tax / CBAM Enforcement</strong></td><td>Favors clean-grid exporters under LOOP</td><td>EUA (&euro;88.76) rallies; dirty credit widens</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tab-thematic" class="tab-panel">
+  <div class="hud-card">
+    <div class="hud-card-title">
+      <div>
+        <h2 id="thematicHeaderTitle">Thematic Decision Matrix // EU (ECB / EUROSTAT)</h2>
+        <p style="font-size:12px;color:var(--text-dim);">Defaults to your active region or EU Member-State's daily parameters, or select any Official Institutional Scenario preset below.</p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <span class="machine-pill" id="th-count-badge">APPLICABLE INSTRUMENTS</span>
+        <button class="gold-btn" onclick="exportThematicMatrixBrief()">EXPORT THEMATIC MATRIX</button>
+      </div>
+    </div>
+
+    <div class="scenario-command-deck">
+      <div class="grid-2">
+        <div>
+          <label style="font-family:var(--font-mono);font-size:10.5px;color:var(--gold);display:block;margin-bottom:5px;">1. OFFICIAL SCENARIO PRESET (DEFAULT = DAILY REGION BASELINE)</label>
+          <select class="form-select" id="th-case-preset" onchange="applyThematicCaseScenario()"></select>
+          <div class="scenario-banner" id="th-case-readout"></div>
+        </div>
+
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:6px;">
+            <span style="font-family:var(--font-mono);font-size:10.5px;color:var(--cyan);">2. POLICY &amp; SHOCK LEVERS</span>
+            <button class="outline-btn" style="padding:3px 9px;font-size:10px;" onclick="resetThematicToDailyDefault()">Reset Daily Default</button>
+          </div>
+          <div class="control-group" style="margin-bottom:8px;padding:8px 11px;">
+            <label>Fiscal Stimulus / Sovereign Spend (&Delta;G)
+              <span class="val-stack"><span class="val-display" id="th-lev-g-val">0</span><span class="src-sub" id="src-th-g">src: fiscal multiplier baseline</span></span>
+            </label>
+            <input type="range" id="th-lev-g" min="-50" max="100" step="5" value="0" oninput="updateThematicSimulation()">
+          </div>
+          <div class="control-group" style="margin-bottom:8px;padding:8px 11px;">
+            <label>Taylor Rule Intercept / Monetary Stance (&Delta;i bps)
+              <span class="val-stack"><span class="val-display" id="th-lev-i-val">0 bps</span><span class="src-sub" id="src-th-i">src: central bank reaction baseline</span></span>
+            </label>
+            <input type="range" id="th-lev-i" min="-200" max="300" step="25" value="0" oninput="updateThematicSimulation()">
+          </div>
+          <div class="control-group" style="margin-bottom:0;padding:8px 11px;">
+            <label>Carbon Price / Supply-Side TFP Shock
+              <span class="val-stack"><span class="val-display" id="th-lev-c-val">0</span><span class="src-sub" id="src-th-c">src: ngfs / eua / solow tfp baseline</span></span>
+            </label>
+            <input type="range" id="th-lev-c" min="-40" max="80" step="5" value="0" oninput="updateThematicSimulation()">
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-4" style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
+        <div>
+          <label style="font-family:var(--font-mono);font-size:10px;color:var(--gold);display:block;margin-bottom:4px;">GROUPING HIERARCHY</label>
+          <select class="form-select" id="th-group-mode" onchange="renderThematicEngine()">
+            <option value="theme_theory">Economic Theme &rarr; Theory &rarr; Instruments</option>
+            <option value="theory_theme">Foundational Theory &rarr; Theme &rarr; Instruments</option>
+            <option value="artifact_class">Instrument Class (Metrics / Curves / Laws / Indicators)</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-family:var(--font-mono);font-size:10px;color:var(--gold);display:block;margin-bottom:4px;">FILTER BY ECONOMIC THEME (7)</label>
+          <select class="form-select" id="th-theme-filter" onchange="syncThemePills(); renderThematicEngine();">
+            <option value="ALL">All 7 Economic Themes</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-family:var(--font-mono);font-size:10px;color:var(--gold);display:block;margin-bottom:4px;">FILTER BY THEORY (15)</label>
+          <select class="form-select" id="th-theory-filter" onchange="renderThematicEngine()">
+            <option value="ALL">All 15 Foundational Theories</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-family:var(--font-mono);font-size:10px;color:var(--gold);display:block;margin-bottom:4px;">REGIONAL SCOPE &amp; SEARCH</label>
+          <div style="display:flex;gap:6px;">
+            <select class="form-select" id="th-scope-filter" style="width:55%;" onchange="renderThematicEngine()">
+              <option value="REGIONAL">Region-Applicable Only</option>
+              <option value="ALL">All Global (69)</option>
+            </select>
+            <input type="text" class="search-bar" id="th-search" style="width:45%;" placeholder="Search..." oninput="renderThematicEngine()" />
+          </div>
+        </div>
+      </div>
+      <div class="th-pills" id="thThemePills"></div>
+    </div>
+
+    <div id="thematicWorkspace"></div>
+  </div>
+</section>
+
+<section id="tab-calendar" class="tab-panel">
+  <div class="hud-card">
+    <div class="hud-card-title">
+      <div>
+        <h2>Retain C-Suite Advisory &amp; Google Calendar Policy Briefing</h2>
+        <p style="font-size:12.5px;color:var(--text-dim);">Schedule an executive macroeconomic strategy or sovereign policy telemetry session with <strong>Kalliopi Papadopoulou</strong>.</p>
+      </div>
+      <span class="machine-pill">GOOGLE CALENDAR &amp; .ICS DISPATCH</span>
+    </div>
+    <div class="grid-2">
+      <div class="info-box">
+        <h4>Executive Session Parameters</h4>
+        <div class="control-group"><label>Briefing Title / Mandate</label><input type="text" class="form-input" id="cal-title" value="C-Suite Political Economy & FX Telemetry Briefing — Kalliopi Papadopoulou" /></div>
+        <div class="grid-2">
+          <div class="control-group"><label>Session Date</label><input type="date" class="form-input" id="cal-date" value="2026-11-05" /></div>
+          <div class="control-group"><label>Start Time (Local)</label><input type="time" class="form-input" id="cal-time" value="10:00" /></div>
+        </div>
+        <div class="control-group"><label>Duration (Minutes)</label><input type="number" class="form-input" id="cal-duration" value="60" min="15" max="240" step="15" /></div>
+        <div class="control-group"><label>Location / Virtual Telemetry Room</label><input type="text" class="form-input" id="cal-loc" value="Executive Strategy Studio (Google Meet / Athens / Zurich / Singapore / Tokyo)" /></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;">
+          <button class="gold-btn" onclick="openGoogleCalendar()">OPEN IN GOOGLE CALENDAR</button>
+          <button class="outline-btn" onclick="downloadICSFile()">DOWNLOAD .ICS CALENDAR FILE</button>
+        </div>
+      </div>
+      <div class="info-box">
+        <h4>Auto-Attached Policy Telemetry Agenda</h4>
+        <textarea id="cal-agenda-preview" class="form-input" style="height:245px;line-height:1.45;margin-top:6px;" readonly></textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="kp-footer">
+  &copy; 2026 <strong>Kalliopi Papadopoulou</strong>. All Rights Reserved. | <em>Macroeconomic Strategy &bull; C-Suite Advisory &bull; Quantitative Finance &bull; AI Architecture</em>
+</footer>
+
+<script>
+let currentJurisdiction = 'EU';
+let currentEUMember = 'EU_SUPRA';
+let masterTaxonomyOpen = true;
+let activeMetricIdx = 0;
+let activeCurveIdx = 0;
+
+function getTodayISO() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+// Institutional Source Attribution Registry (displayed in lowercase with daily date beneath each current value)
+const REGION_SOURCES = {
+  EU: {
+    yield: 'ecb yield curve / eurostat',
+    policy: 'ecb governing council',
+    cds: 'dtcc / markit itraxx sovx we',
+    metrics: 'eurostat / ecb sdw / dg ecfin',
+    indicators: [
+      'eurostat nama_10_gdp', 'eurostat quarterly national accounts', 'eurostat prc_hicp_manr (hicp)',
+      'eurostat sts_inppd_m', 'eurostat gdp deflator', 'eurostat une_rt_m (lfs)',
+      'eurostat lfsi_emp_a', 'ecb bsi m2/m3 monetary aggregates', 'ecb bop / eurostatbop_c6_q',
+      'eurostat ilc_di12 (eu-silc)', 'eurostat env_ac_ainah_r2', 'ice endex / eex eu ets (eua)',
+      'eurostat chain-linked volumes', 'ecb supervisory banking statistics (cet1)', 'eurex vstoxx / stoxx',
+      'undp hdr / eurostat', 'eu klems / dg ecfin ameco tfp'
+    ]
+  },
+  US: {
+    yield: 'u.s. treasury / fred dgs10',
+    policy: 'federal reserve fomc (fed funds)',
+    cds: 'dtcc / s&p u.s. sovereign cds',
+    metrics: 'bea / bls / federal reserve fred',
+    indicators: [
+      'bea nipa table 1.1.5', 'bea real gdp advance/final', 'bls cpi-u all items',
+      'bls ppi final demand', 'bea implicit price deflator', 'bls cps u-3 unemployment',
+      'bls civilian lfpr', 'federal reserve h.6 (m2)', 'bea international transactions',
+      'u.s. census bureau acs', 'bea integrated environmental accounts', 'u.s. epa / iwg social cost of carbon',
+      'bea fisher chain-weighted index', 'fdic / fed y-9c cet1 ratio', 'cboe vix index',
+      'undp human development report', 'bls multifactor productivity / sf fed'
+    ]
+  },
+  CH: {
+    yield: 'snb / six swiss exchange 10y conf',
+    policy: 'swiss national bank (snb policy rate)',
+    cds: 'dtcc / six sovereign credit desk',
+    metrics: 'snb data portal / seco / fso',
+    indicators: [
+      'seco / bfs national accounts', 'seco quarterly real gdp', 'bfs lik consumer price index',
+      'bfs producer & import price index', 'seco/bfs gdp deflator', 'seco registered unemployment',
+      'bfs sak labor force survey', 'snb monetary aggregate m2/m3', 'snb balance of payments',
+      'bfs silc income distribution', 'bfs environmental-economic accounts', 'bafu swiss co2 levy registry',
+      'bfs chain-linked gdp', 'finma / snb financial stability cet1', 'six vsmi volatility index',
+      'undp hdr (rank #1)', 'kof eth zurich / bfs productivity'
+    ]
+  },
+  UK: {
+    yield: 'bank of england / dmo 10y gilt',
+    policy: 'bank of england mpc (bank rate)',
+    cds: 'dtcc / ice uk sovereign cds',
+    metrics: 'ons / bank of england / obr',
+    indicators: [
+      'ons uk national accounts', 'ons chained volume real gdp', 'ons uk cpi headline',
+      'ons producer price inflation', 'ons implied gdp deflator', 'ons labour force survey',
+      'ons economic activity rate', 'bank of england m4 broad money', 'ons balance of payments (pink book)',
+      'ons household disposable income', 'ons uk natural capital accounts', 'ice futures europe uk ets (uka)',
+      'ons fisher/chain-linked volume', 'boe pra banking sector cet1', 'ftse russell / ice vftse',
+      'undp human development report', 'ons multi-factor productivity'
+    ]
+  },
+  JP: {
+    yield: 'mof japan / boj 10y jgb',
+    policy: 'bank of japan mpm (uncollateralized o/n)',
+    cds: 'dtcc / jsda sovereign cds',
+    metrics: 'cabinet office (esri) / boj / mic',
+    indicators: [
+      'esri cabinet office sna', 'esri real gdp chained', 'mic statistics bureau cpi',
+      'boj corporate goods price index (cgpi)', 'esri sna gdp deflator', 'mic labour force survey',
+      'mic active participation rate', 'boj money stock m2', 'mof / boj balance of payments',
+      'mhlw income redistribution survey', 'cabinet office green sna', 'meti / jpx gx-ets carbon credit',
+      'esri chain-linked real gdp', 'fsa / boj financial system report cet1', 'osaka exchange nikkei vi (jniv)',
+      'undp human development report', 'rieti / jpc total factor productivity'
+    ]
+  },
+  SG: {
+    yield: 'mas / sgs 10y benchmark bond',
+    policy: 'mas s$neer / sora benchmark',
+    cds: 'dtcc / mas sovereign credit proxy',
+    metrics: 'singstat / mti / mas',
+    indicators: [
+      'singstat / mti national accounts', 'mti real gdp growth', 'singstat / mas cpi-all items',
+      'singstat manufactured products price', 'singstat gdp deflator', 'mom labour market report',
+      'mom comprehensive labour force survey', 'mas monetary authority m2', 'singstat balance of payments',
+      'singstat household expenditure survey', 'mse / nea sustainability accounts', 'nea singapore carbon tax act',
+      'singstat chain-linked volume', 'mas financial stability review d-sib cet1', 'sgx / mas regional volatility proxy',
+      'undp human development report', 'mti / singstat multifactor productivity'
+    ]
+  }
+};
+
+// Complete EU Supranational + All 27 Member States (including Bulgaria Eurozone Accession Jan 2026)
+const EU_MEMBER_STATES = {
+  EU_SUPRA: {
+    code: 'EU_SUPRA', iso: 'EU', name: 'EU Supranational Aggregate (ECB / Eurostat)', ncb: 'ECB / Eurostat',
+    euro: true, currency: '€', yield10y: '2.42%', policyRate: 3.25, cdsBps: 32,gdpScale: 1.0,
+    src: 'ecb sdw / eurostat aggregate',
+    indicators: ['€14.8 Trn', '+1.2% YoY', '2.2% YoY', '1.3% YoY', '2.3% YoY', '6.4%', '65.0%', '€15.5 Trn (M2)', '+2.3% GDP', '0.298', '91.1% GDP', '€88.76 / tCO2', '+1.2% YoY', '15.8% CET1', '18.20 (VSTOXX)', '0.915', '+1.0% YoY']
+  },
+  DE: {
+    code: 'DE', iso: 'DE', name: 'Germany (Bundesbank / Destatis)', ncb: 'Deutsche Bundesbank / Destatis',
+    euro: true, currency: '€', yield10y: '2.18%', policyRate: 3.25, cdsBps: 14, gdpScale: 0.285,
+    src: 'bundesbank / destatis / eurostat',
+    indicators: ['€4.22 Trn', '+0.6% YoY', '2.0% YoY', '0.8% YoY', '2.1% YoY', '3.4%', '66.8%', '€3.95 Trn (M2)', '+5.8% GDP', '0.290', '92.0% GDP', '€88.76 / tCO2', '+0.6% YoY', '16.1% CET1', '17.40 (VDAX)', '0.950', '+0.8% YoY']
+  },
+  FR: {
+    code: 'FR', iso: 'FR', name: 'France (Banque de France / INSEE)', ncb: 'Banque de France / INSEE',
+    euro: true, currency: '€', yield10y: '2.94%', policyRate: 3.25, cdsBps: 38, gdpScale: 0.195,
+    src: 'banque de france / insee / eurostat',
+    indicators: ['€2.89 Trn', '+1.1% YoY', '1.9% YoY', '1.0% YoY', '2.1% YoY', '7.3%', '64.2%', '€2.74 Trn (M2)', '-1.1% GDP', '0.293', '91.8% GDP', '€88.76 / tCO2', '+1.1% YoY', '15.6% CET1', '18.50 (VCAC)', '0.910', '+0.9% YoY']
+  },
+  IT: {
+    code: 'IT', iso: 'IT', name: 'Italy (Banca d’Italia / ISTAT)', ncb: 'Banca d’Italia / ISTAT',
+    euro: true, currency: '€', yield10y: '3.48%', policyRate: 3.25, cdsBps: 64, gdpScale: 0.145,
+    src: 'banca d’italia / istat / eurostat',
+    indicators: ['€2.15 Trn', '+0.9% YoY', '1.7% YoY', '0.9% YoY', '1.9% YoY', '6.5%', '58.4%', '€1.98 Trn (M2)', '+1.4% GDP', '0.318', '90.4% GDP', '€88.76 / tCO2', '+0.9% YoY', '15.4% CET1', '19.40 (FTSEMIB-V)', '0.906', '+0.6% YoY']
+  },
+  ES: {
+    code: 'ES', iso: 'ES', name: 'Spain (Banco de España / INE)', ncb: 'Banco de España / INE',
+    euro: true, currency: '€', yield10y: '2.92%', policyRate: 3.25, cdsBps: 41, gdpScale: 0.105,
+    src: 'banco de españa / ine / eurostat',
+    indicators: ['€1.55 Trn', '+2.4% YoY', '2.3% YoY', '1.4% YoY', '2.4% YoY', '11.2%', '63.9%', '€1.42 Trn (M2)', '+2.6% GDP', '0.315', '91.2% GDP', '€88.76 / tCO2', '+2.4% YoY', '13.2% CET1', '18.10 (VIBEX)', '0.911', '+1.5% YoY']
+  },
+  NL: {
+    code: 'NL', iso: 'NL', name: 'Netherlands (DNB / CBS)', ncb: 'De Nederlandsche Bank / CBS',
+    euro: true, currency: '€', yield10y: '2.45%', policyRate: 3.25, cdsBps: 16, gdpScale: 0.074,
+    src: 'dnb / cbs / eurostat',
+    indicators: ['€1.10 Trn', '+1.4% YoY', '2.5% YoY', '1.2% YoY', '2.4% YoY', '3.7%', '71.8%', '€1.05 Trn (M2)', '+9.2% GDP', '0.264', '92.4% GDP', '€88.76 / tCO2', '+1.4% YoY', '16.8% CET1', '16.90 (VAEX)', '0.946', '+1.3% YoY']
+  },
+  GR: {
+    code: 'GR', iso: 'GR', name: 'Greece (Bank of Greece / ELSTAT)', ncb: 'Bank of Greece / ELSTAT',
+    euro: true, currency: '€', yield10y: '3.12%', policyRate: 3.25, cdsBps: 58, gdpScale: 0.016,
+    src: 'bank of greece / elstat / eurostat',
+    indicators: ['€238 Bn', '+2.3% YoY', '2.4% YoY', '1.5% YoY', '2.5% YoY', '9.3%', '60.8%', '€212 Bn (M2)', '-5.4% GDP', '0.312', '89.6% GDP', '€88.76 / tCO2', '+2.3% YoY', '15.9% CET1', '19.80 (ATHEX-V)', '0.893', '+1.7% YoY']
+  },
+  BG: {
+    code: 'BG', iso: 'BG', name: 'Bulgaria (BNB / NSI — Eurozone Member 2026)', ncb: 'Bulgarian National Bank (BNB) / NSI / ECB',
+    euro: true, isNewMember: true, currency: '€', yield10y: '3.35%', policyRate: 3.25, cdsBps: 62, gdpScale: 0.007,
+    src: 'bnb / nsi / eurostat (eur accession 2026)',
+    indicators: ['€104 Bn', '+2.7% YoY', '2.5% YoY', '1.8% YoY', '2.6% YoY', '4.2%', '63.4%', '€86 Bn (M2)', '-0.8% GDP', '0.372', '88.1% GDP', '€88.76 / tCO2', '+2.7% YoY', '20.1% CET1', '19.10 (SOFIX-V)', '0.816', '+2.1% YoY']
+  },
+  BE: {
+    code: 'BE', iso: 'BE', name: 'Belgium (NBB / Statbel)', ncb: 'National Bank of Belgium / Statbel',
+    euro: true, currency: '€', yield10y: '2.78%', policyRate: 3.25, cdsBps: 26, gdpScale: 0.041,
+    src: 'nbb / statbel / eurostat',
+    indicators: ['€612 Bn', '+1.3% YoY', '2.8% YoY', '1.5% YoY', '2.5% YoY', '5.6%', '62.1%', '€580 Bn (M2)', '-0.7% GDP', '0.249', '91.4% GDP', '€88.76 / tCO2', '+1.3% YoY', '16.4% CET1', '17.60 (VSTOXX)', '0.942', '+1.0% YoY']
+  },
+  AT: {
+    code: 'AT', iso: 'AT', name: 'Austria (OeNB / Statistik Austria)', ncb: 'Oesterreichische Nationalbank / Statistik Austria',
+    euro: true, currency: '€', yield10y: '2.68%', policyRate: 3.25, cdsBps: 22, gdpScale: 0.033,
+    src: 'oenb / statistik austria / eurostat',
+    indicators: ['€492 Bn', '+0.8% YoY', '2.3% YoY', '1.1% YoY', '2.3% YoY', '5.1%', '66.4%', '€460 Bn (M2)', '+2.4% GDP', '0.278', '92.8% GDP', '€88.76 / tCO2', '+0.8% YoY', '15.7% CET1', '17.90 (VSTOXX)', '0.926', '+0.9% YoY']
+  },
+  IE: {
+    code: 'IE', iso: 'IE', name: 'Ireland (Central Bank of Ireland / CSO)', ncb: 'Central Bank of Ireland / CSO',
+    euro: true, currency: '€', yield10y: '2.56%', policyRate: 3.25, cdsBps: 20, gdpScale: 0.036,
+    src: 'central bank of ireland / cso / eurostat',
+    indicators: ['€535 Bn (GNI* €310B)', '+2.8% YoY', '1.8% YoY', '1.0% YoY', '2.0% YoY', '4.3%', '68.1%', '€410 Bn (M2)', '+9.8% GDP', '0.269', '92.5% GDP', '€88.76 / tCO2', '+2.8% YoY', '18.2% CET1', '17.50 (VSTOXX)', '0.950', '+2.4% YoY']
+  },
+  FI: {
+    code: 'FI', iso: 'FI', name: 'Finland (Bank of Finland / StatFin)', ncb: 'Suomen Pankki / Statistics Finland',
+    euro: true, currency: '€', yield10y: '2.66%', policyRate: 3.25, cdsBps: 21, gdpScale: 0.019,
+    src: 'suomen pankki / statfin / eurostat',
+    indicators: ['€285 Bn', '+0.9% YoY', '1.6% YoY', '0.7% YoY', '1.8% YoY', '7.8%', '67.9%', '€240 Bn (M2)', '-1.2% GDP', '0.266', '93.8% GDP', '€88.76 / tCO2', '+0.9% YoY', '17.9% CET1', '17.70 (VSTOXX)', '0.942', '+1.1% YoY']
+  },
+  PT: {
+    code: 'PT', iso: 'PT', name: 'Portugal (Banco de Portugal / INE)', ncb: 'Banco de Portugal / INE',
+    euro: true, currency: '€', yield10y: '2.82%', policyRate: 3.25, cdsBps: 35, gdpScale: 0.019,
+    src: 'banco de portugal / ine / eurostat',
+    indicators: ['€278 Bn', '+1.9% YoY', '2.1% YoY', '1.2% YoY', '2.2% YoY', '6.4%', '66.2%', '€252 Bn (M2)', '+1.6% GDP', '0.312', '90.9% GDP', '€88.76 / tCO2', '+1.9% YoY', '16.5% CET1', '18.10 (VSTOXX)', '0.874', '+1.4% YoY']
+  },
+  LU: {
+    code: 'LU', iso: 'LU', name: 'Luxembourg (BCL / STATEC)', ncb: 'Banque Centrale du Luxembourg / STATEC',
+    euro: true, currency: '€', yield10y: '2.38%', policyRate: 3.25, cdsBps: 12, gdpScale: 0.006,
+    src: 'bcl / statec / eurostat',
+    indicators: ['€84 Bn', '+1.8% YoY', '2.0% YoY', '1.0% YoY', '2.1% YoY', '5.7%', '65.4%', '€195 Bn (M2)', '+4.6% GDP', '0.306', '93.1% GDP', '€88.76 / tCO2', '+1.8% YoY', '21.4% CET1', '16.80 (VSTOXX)', '0.927', '+1.3% YoY']
+  },
+  HR: {
+    code: 'HR', iso: 'HR', name: 'Croatia (HNB / DZS)', ncb: 'Hrvatska narodna banka / DZS',
+    euro: true, currency: '€', yield10y: '3.18%', policyRate: 3.25, cdsBps: 54, gdpScale: 0.0055,
+    src: 'hnb / dzs / eurostat',
+    indicators: ['€82 Bn', '+3.1% YoY', '2.6% YoY', '1.6% YoY', '2.8% YoY', '5.5%', '60.4%', '€64 Bn (M2)', '+1.2% GDP', '0.289', '90.2% GDP', '€88.76 / tCO2', '+3.1% YoY', '19.8% CET1', '18.60 (VSTOXX)', '0.878', '+2.0% YoY']
+  },
+  SI: {
+    code: 'SI', iso: 'SI', name: 'Slovenia (Banka Slovenije / SURS)', ncb: 'Banka Slovenije / SURS',
+    euro: true, currency: '€', yield10y: '2.96%', policyRate: 3.25, cdsBps: 39, gdpScale: 0.0045,
+    src: 'banka slovenije / surs / eurostat',
+    indicators: ['€67 Bn', '+2.1% YoY', '2.0% YoY', '1.1% YoY', '2.2% YoY', '3.6%', '66.5%', '€52 Bn (M2)', '+4.1% GDP', '0.240', '91.8% GDP', '€88.76 / tCO2', '+2.1% YoY', '16.9% CET1', '18.00 (VSTOXX)', '0.926', '+1.6% YoY']
+  },
+  SK: {
+    code: 'SK', iso: 'SK', name: 'Slovakia (NBS / ŠÚ SR)', ncb: 'Národná banka Slovenska / ŠÚ SR',
+    euro: true, currency: '€', yield10y: '3.32%', policyRate: 3.25, cdsBps: 52, gdpScale: 0.0085,
+    src: 'nbs / šú sr / eurostat',
+    indicators: ['€128 Bn', '+2.2% YoY', '2.7% YoY', '1.7% YoY', '2.8% YoY', '5.4%', '65.8%', '€98 Bn (M2)', '-1.5% GDP', '0.216', '89.7% GDP', '€88.76 / tCO2', '+2.2% YoY', '16.2% CET1', '18.70 (VSTOXX)', '0.855', '+1.7% YoY']
+  },
+  LT: {
+    code: 'LT', iso: 'LT', name: 'Lithuania (Lietuvos bankas / VDA)', ncb: 'Lietuvos bankas / State Data Agency',
+    euro: true, currency: '€', yield10y: '3.15%', policyRate: 3.25, cdsBps: 48, gdpScale: 0.0052,
+    src: 'lietuvos bankas / vda / eurostat',
+    indicators: ['€77 Bn', '+2.5% YoY', '1.8% YoY', '1.2% YoY', '2.1% YoY', '6.8%', '68.4%', '€58 Bn (M2)', '+2.2% GDP', '0.353', '90.6% GDP', '€88.76 / tCO2', '+2.5% YoY', '18.5% CET1', '18.40 (VSTOXX)', '0.879', '+1.9% YoY']
+  },
+  LV: {
+    code: 'LV', iso: 'LV', name: 'Latvia (Latvijas Banka / CSP)', ncb: 'Latvijas Banka / CSB Latvia',
+    euro: true, currency: '€', yield10y: '3.22%', policyRate: 3.25, cdsBps: 50, gdpScale: 0.003,
+    src: 'latvijas banka / csp / eurostat',
+    indicators: ['€43 Bn', '+1.8% YoY', '1.6% YoY', '1.0% YoY', '1.9% YoY', '6.6%', '66.9%', '€31 Bn (M2)', '-2.4% GDP', '0.340', '91.1% GDP', '€88.76 / tCO2', '+1.8% YoY', '19.2% CET1', '18.50 (VSTOXX)', '0.879', '+1.5% YoY']
+  },
+  EE: {
+    code: 'EE', iso: 'EE', name: 'Estonia (Eesti Pank / Stat Estonia)', ncb: 'Eesti Pank / Statistics Estonia',
+    euro: true, currency: '€', yield10y: '3.19%', policyRate: 3.25, cdsBps: 49, gdpScale: 0.0027,
+    src: 'eesti pank / stat estonia / eurostat',
+    indicators: ['€40 Bn', '+1.5% YoY', '3.1% YoY', '1.6% YoY', '2.9% YoY', '7.1%', '70.2%', '€32 Bn (M2)', '-1.8% GDP', '0.318', '90.8% GDP', '€88.76 / tCO2', '+1.5% YoY', '21.6% CET1', '18.40 (VSTOXX)', '0.899', '+1.8% YoY']
+  },
+  CY: {
+    code: 'CY', iso: 'CY', name: 'Cyprus (Central Bank of Cyprus / CYSTAT)', ncb: 'Central Bank of Cyprus / CYSTAT',
+    euro: true, currency: '€', yield10y: '3.08%', policyRate: 3.25, cdsBps: 55, gdpScale: 0.0022,
+    src: 'central bank of cyprus / cystat / eurostat',
+    indicators: ['€33 Bn', '+2.9% YoY', '2.1% YoY', '1.4% YoY', '2.3% YoY', '5.3%', '67.5%', '€42 Bn (M2)', '-7.8% GDP', '0.294', '90.5% GDP', '€88.76 / tCO2', '+2.9% YoY', '18.9% CET1', '18.80 (VSTOXX)', '0.907', '+2.0% YoY']
+  },
+  MT: {
+    code: 'MT', iso: 'MT', name: 'Malta (Central Bank of Malta / NSO)', ncb: 'Central Bank of Malta / NSO',
+    euro: true, currency: '€', yield10y: '3.04%', policyRate: 3.25, cdsBps: 44, gdpScale: 0.0015,
+    src: 'central bank of malta / nso / eurostat',
+    indicators: ['€22 Bn', '+4.2% YoY', '2.3% YoY', '1.5% YoY', '2.5% YoY', '3.1%', '69.8%', '€28 Bn (M2)', '+4.9% GDP', '0.311', '90.7% GDP', '€88.76 / tCO2', '+4.2% YoY', '19.4% CET1', '18.10 (VSTOXX)', '0.915', '+2.5% YoY']
+  },
+  PL: {
+    code: 'PL', iso: 'PL', name: 'Poland (NBP / GUS — Non-Euro EU)', ncb: 'Narodowy Bank Polski (NBP) / GUS',
+    euro: false, currency: 'PLN ', yield10y: '5.38%', policyRate: 5.75, cdsBps: 65, gdpScale: 0.056,
+    src: 'nbp / gus / eurostat',
+    indicators: ['PLN 3.65 Trn (€845B)', '+3.4% YoY', '3.8% YoY', '2.1% YoY', '3.6% YoY', '2.9%', '64.5%', 'PLN 2.42 Trn (M2)', '+1.1% GDP', '0.268', '88.5% GDP', '€88.76 / tCO2', '+3.4% YoY', '17.2% CET1', '20.10 (WIG20-V)', '0.881', '+2.6% YoY']
+  },
+  SE: {
+    code: 'SE', iso: 'SE', name: 'Sweden (Sveriges Riksbank / SCB — Non-Euro EU)', ncb: 'Sveriges Riksbank / SCB',
+    euro: false, currency: 'SEK ', yield10y: '2.12%', policyRate: 2.75, cdsBps: 14, gdpScale: 0.039,
+    src: 'sveriges riksbank / scb / eurostat',
+    indicators: ['SEK 6.45 Trn (€565B)', '+1.6% YoY', '1.8% YoY', '0.9% YoY', '1.9% YoY', '8.2%', '71.4%', 'SEK 4.95 Trn (M2)', '+6.4% GDP', '0.286', '94.2% GDP', '€88.76 / tCO2', '+1.6% YoY', '19.5% CET1', '16.70 (OMXS-V)', '0.952', '+1.6% YoY']
+  },
+  DK: {
+    code: 'DK', iso: 'DK', name: 'Denmark (Danmarks Nationalbank / DST — ERM II)', ncb: 'Danmarks Nationalbank / DST',
+    euro: false, currency: 'DKK ', yield10y: '2.24%', policyRate: 2.85, cdsBps: 13, gdpScale: 0.026,
+    src: 'danmarks nationalbank / dst / eurostat',
+    indicators: ['DKK 2.88 Trn (€386B)', '+2.3% YoY', '1.7% YoY', '0.8% YoY', '1.9% YoY', '5.1%', '70.6%', 'DKK 2.15 Trn (M2)', '+10.4% GDP', '0.282', '93.9% GDP', '€88.76 / tCO2', '+2.3% YoY', '18.6% CET1', '16.90 (OMXC-V)', '0.952', '+1.9% YoY']
+  },
+  CZ: {
+    code: 'CZ', iso: 'CZ', name: 'Czechia (ČNB / ČSÚ — Non-Euro EU)', ncb: 'Česká národní banka (ČNB) / ČSÚ',
+    euro: false, currency: 'CZK ', yield10y: '3.92%', policyRate: 4.00, cdsBps: 36, gdpScale: 0.021,
+    src: 'čnb / čsú / eurostat',
+    indicators: ['CZK 7.85 Trn (€312B)', '+2.0% YoY', '2.3% YoY', '1.3% YoY', '2.4% YoY', '2.8%', '66.7%', 'CZK 6.60 Trn (M2)', '+1.2% GDP', '0.244', '90.1% GDP', '€88.76 / tCO2', '+2.0% YoY', '18.8% CET1', '18.20 (PX-V)', '0.895', '+1.6% YoY']
+  },
+  RO: {
+    code: 'RO', iso: 'RO', name: 'Romania (BNR / INS — Non-Euro EU)', ncb: 'Banca Națională a României (BNR) / INS',
+    euro: false, currency: 'RON ', yield10y: '6.45%', policyRate: 6.50, cdsBps: 145, gdpScale: 0.024,
+    src: 'bnr / ins / eurostat',
+    indicators: ['RON 1.76 Trn (€354B)', '+2.8% YoY', '4.6% YoY', '2.5% YoY', '4.3% YoY', '5.4%', '59.2%', 'RON 715 Bn (M2)', '-7.1% GDP', '0.320', '88.3% GDP', '€88.76 / tCO2', '+2.8% YoY', '19.1% CET1', '20.50 (BET-V)', '0.827', '+2.2% YoY']
+  },
+  HU: {
+    code: 'HU', iso: 'HU', name: 'Hungary (MNB / KSH — Non-Euro EU)', ncb: 'Magyar Nemzeti Bank (MNB) / KSH',
+    euro: false, currency: 'HUF ', yield10y: '6.35%', policyRate: 6.50, cdsBps: 138, gdpScale: 0.014,
+    src: 'mnb / ksh / eurostat',
+    indicators: ['HUF 82.5 Trn (€208B)', '+2.4% YoY', '3.7% YoY', '2.2% YoY', '3.8% YoY', '4.4%', '66.1%', 'HUF 42.8 Trn (M2)', '+1.5% GDP', '0.276', '88.9% GDP', '€88.76 / tCO2', '+2.4% YoY', '17.6% CET1', '20.80 (BUX-V)', '0.851', '+1.8% YoY']
+  }
+};
+// Complete Region-Specific Daily Defaults for all 10 Metrics + 17 Indicators
+const JURISDICTIONS = {
+  EU: {
+    name: 'EU SUPRANATIONAL AGGREGATE (ECB / EUROSTAT)', short: 'EU', currency: '€', yield10y: '2.42%', policyRate: 3.25, cdsBps: 32,
+    metrics: {
+      ped: { p1: 1.85, p2: 2.10, q1: 120, q2: 112 },
+      gdp_id: { c: 8055, i: 3136, g: 3194, x: 7298, m: 6858 },
+      mult: { dg: 65, mpc: 0.72, tax: 0.28, mpi: 0.22 },
+      qtm: { m: 15.5, v: 1.18, y: 14.8 },
+      mmult: { mb: 4.4, r: 0.01, e: 0.11, c: 0.14 },
+      taylor: { rstar: 0.75, pi: 2.2, pistar: 2.0, ygap: -0.1 },
+      chain_gdp: { lasp: 1.4, paas: 1.0 },
+      scc: { dmg: 5.4, r: 2.0, g: 0.8 },
+      leverage: { t1: 82, exp: 1320 },
+      cobb: { a: 3.2, k: 175, l: 145, alpha: 0.35 }
+    },
+    defaultIndicators: ['€14.8 Trn', '+1.2% YoY', '2.2% YoY', '1.3% YoY', '2.3% YoY', '6.4%', '65.0%', '€15.5 Trn (M2)', '+2.3% GDP', '0.298', '91.1% GDP', '€88.76 / tCO2', '+1.2% YoY', '15.8% CET1', '18.20 (VSTOXX)', '0.915', '+1.0% YoY'],
+    indicators: [],
+    applicable: {
+      metrics: ['ped','gdp_id','mult','qtm','mmult','taylor','chain_gdp','scc','leverage','cobb'],
+      curves: ['c1','c2','c3','c4','c5','c6','c8','c10','c11','c13','c14','c18','c20','c21','c23','c24','c25','c26','c27','c28','c29','c30','c31'],
+      laws: [0,1,2,3,4,5,8,9,10],
+      indicators: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
+    }
+  },
+  US: {
+    name: 'UNITED STATES (FED / BEA / BLS)', short: 'UNITED STATES', currency: '$', yield10y: '5.00%', policyRate: 4.75, cdsBps: 38,
+    metrics: {
+      ped: { p1: 3.60, p2: 4.15, q1: 140, q2: 133 },
+      gdp_id: { c: 19600, i: 5100, g: 4950, x: 3100, m: 3950 },
+      mult: { dg: 120, mpc: 0.78, tax: 0.21, mpi: 0.14 },
+      qtm: { m: 21.3, v: 1.35, y: 23.1 },
+      mmult: { mb: 5.5, r: 0.0, e: 0.12, c: 0.15 },
+      taylor: { rstar: 1.25, pi: 2.7, pistar: 2.0, ygap: 0.6 },
+      chain_gdp: { lasp: 2.8, paas: 2.4 },
+      scc: { dmg: 6.2, r: 2.0, g: 0.8 },
+      leverage: { t1: 115, exp: 1980 },
+      cobb: { a: 4.1, k: 220, l: 165, alpha: 0.36 }
+    },
+    defaultIndicators: ['$28.8 Trn', '+2.6% YoY', '2.7% YoY', '2.2% YoY', '2.5% YoY', '4.1%', '62.7%', '$21.3 Trn (M2)', '-3.3% GDP', '0.412', '88.4% GDP', '$190 / tCO2', '+2.5% YoY', '13.4% CET1', '17.12 (VIX)', '0.926', '+1.6% YoY'],
+    indicators: [],
+    applicable: {
+      metrics: ['ped','gdp_id','mult','qtm','mmult','taylor','chain_gdp','scc','leverage','cobb'],
+      curves: ['c1','c2','c5','c7','c8','c11','c12','c13','c14','c15','c16','c17','c18','c19','c20','c21','c23','c24','c25','c26','c28','c30'],
+      laws: [0,1,2,3,5,6,8,9,10],
+      indicators: [0,1,2,3,4,5,6,7,8,9,11,12,13,14,15,16]
+    }
+  },
+  CH: {
+    name: 'SWITZERLAND (SNB / SECO)', short: 'SWITZERLAND', currency: 'CHF ', yield10y: '0.48%', policyRate: 1.00, cdsBps: 12,
+    metrics: {
+      ped: { p1: 1.90, p2: 2.15, q1: 45, q2: 43 },
+      gdp_id: { c: 430, i: 215, g: 95, x: 590, m: 495 },
+      mult: { dg: 10, mpc: 0.62, tax: 0.18, mpi: 0.35 },
+      qtm: { m: 1.14, v: 0.85, y: 0.84 },
+      mmult: { mb: 0.55, r: 0.025, e: 0.22, c: 0.10 },
+      taylor: { rstar: 0.50, pi: 1.1, pistar: 1.5, ygap: 0.1 },
+      chain_gdp: { lasp: 1.6, paas: 1.3 },
+      scc: { dmg: 4.5, r: 1.75, g: 0.7 },
+      leverage: { t1: 55, exp: 780 },
+      cobb: { a: 4.0, k: 190, l: 115, alpha: 0.34 }
+    },
+    defaultIndicators: ['CHF 835 Bn', '+1.5% YoY', '1.1% YoY', '0.4% YoY', '1.2% YoY', '2.5%', '67.9%', 'CHF 1.14 Trn', '+7.6% GDP', '0.331', '94.1% GDP', 'CHF 120 / tCO2', '+1.4% YoY', '18.2% CET1', '14.20 (VSMI)', '0.967', '+1.3% YoY'],
+    indicators: [],
+    applicable: {
+      metrics: ['ped','gdp_id','taylor','chain_gdp','scc','leverage','cobb'],
+      curves: ['c1','c2','c5','c10','c13','c16','c18','c21','c22','c23','c24','c26','c27','c30','c31'],
+      laws: [0,2,3,5,6,8,10],
+      indicators: [0,1,2,4,5,6,8,9,10,11,13,14,15,16]
+    }
+  },
+  UK: {
+    name: 'UNITED KINGDOM (BoE / ONS)', short: 'UNITED KINGDOM', currency: '£', yield10y: '4.32%', policyRate: 4.75, cdsBps: 34,
+    metrics: {
+      ped: { p1: 1.50, p2: 1.75, q1: 85, q2: 79 },
+      gdp_id: { c: 1680, i: 470, g: 560, x: 860, m: 900 },
+      mult: { dg: 25, mpc: 0.75, tax: 0.26, mpi: 0.28 },
+      qtm: { m: 3.05, v: 1.05, y: 2.67 },
+      mmult: { mb: 0.85, r: 0.01, e: 0.14, c: 0.12 },
+      taylor: { rstar: 1.0, pi: 2.6, pistar: 2.0, ygap: -0.1 },
+      chain_gdp: { lasp: 1.4, paas: 1.1 },
+      scc: { dmg: 3.8, r: 2.5, g: 0.8 },
+      leverage: { t1: 68, exp: 1180 },
+      cobb: { a: 3.1, k: 155, l: 140, alpha: 0.34 }
+    },
+    defaultIndicators: ['£2.67 Trn', '+1.3% YoY', '2.6% YoY', '1.9% YoY', '2.7% YoY', '4.3%', '62.9%', '£3.05 Trn (M4)', '-3.1% GDP', '0.355', '90.4% GDP', '£64 / tCO2', '+1.2% YoY', '14.8% CET1', '16.50 (VFTSE)', '0.940', '+0.8% YoY'],
+    indicators: [],
+    applicable: {
+      metrics: ['ped','gdp_id','mult','qtm','taylor','chain_gdp','scc','leverage','cobb'],
+      curves: ['c1','c2','c4','c8','c9','c11','c13','c14','c18','c19','c20','c23','c24','c25','c26','c27','c29','c30'],
+      laws: [0,1,2,3,4,5,8,10],
+      indicators: [0,1,2,3,4,5,6,7,8,9,11,12,13,14,15,16]
+    }
+  },
+  JP: {
+    name: 'JAPAN (BoJ / CABINET OFFICE)', short: 'JAPAN', currency: '¥', yield10y: '1.08%', policyRate: 0.25, cdsBps: 22,
+    metrics: {
+      ped: { p1: 170, p2: 195, q1: 110, q2: 104 },
+      gdp_id: { c: 325, i: 165, g: 125, x: 115, m: 120 },
+      mult: { dg: 15, mpc: 0.65, tax: 0.22, mpi: 0.18 },
+      qtm: { m: 12.55, v: 0.82, y: 6.10 },
+      mmult: { mb: 6.5, r: 0.01, e: 0.25, c: 0.18 },
+      taylor: { rstar: 0.0, pi: 2.5, pistar: 2.0, ygap: 0.2 },
+      chain_gdp: { lasp: 1.2, paas: 0.9 },
+      scc: { dmg: 4.0, r: 2.0, g: 0.7 },
+      leverage: { t1: 72, exp: 1420 },
+      cobb: { a: 3.3, k: 210, l: 125, alpha: 0.37 }
+    },
+    defaultIndicators: ['¥610 Trn ($4.0T)', '+1.0% YoY', '2.5% YoY', '2.8% YoY', '2.4% YoY', '2.5%', '63.1%', '¥1,255 Trn (M2)', '+3.6% GDP', '0.329', '90.8% GDP', '¥4,500 / tCO2', '+1.0% YoY', '13.1% CET1', '20.40 (JNIV)', '0.920', '+0.9% YoY'],
+    indicators: [],
+    applicable: {
+      metrics: ['gdp_id','mult','qtm','mmult','taylor','chain_gdp','leverage','cobb'],
+      curves: ['c1','c5','c6','c9','c13','c14','c15','c16','c17','c18','c20','c21','c22','c24','c25','c26','c27','c30','c31'],
+      laws: [2,3,5,6,7,8,10],
+      indicators: [0,1,2,3,4,5,6,7,8,12,13,14,15,16]
+    }
+  },
+  SG: {
+    name: 'SINGAPORE (MAS / MTI)', short: 'SINGAPORE', currency: 'S$', yield10y: '2.85%', policyRate: 3.40, cdsBps: 10,
+    metrics: {
+      ped: { p1: 2.80, p2: 3.20, q1: 60, q2: 55 },
+      gdp_id: { c: 245, i: 165, g: 75, x: 1240, m: 1045 },
+      mult: { dg: 8, mpc: 0.60, tax: 0.15, mpi: 0.50 },
+      qtm: { m: 0.82, v: 1.10, y: 0.68 },
+      mmult: { mb: 0.22, r: 0.03, e: 0.09, c: 0.08 },
+      taylor: { rstar: 1.5, pi: 2.1, pistar: 2.0, ygap: 0.4 },
+      chain_gdp: { lasp: 3.2, paas: 2.9 },
+      scc: { dmg: 3.5, r: 2.5, g: 0.9 },
+      leverage: { t1: 58, exp: 840 },
+      cobb: { a: 4.3, k: 185, l: 110, alpha: 0.40 }
+    },
+    defaultIndicators: ['S$680 Bn', '+3.1% YoY', '2.1% YoY', '1.1% YoY', '2.0% YoY', '1.9%', '68.6%', 'S$820 Bn (M2)', '+18.5% GDP', '0.371 (After Tax)', '93.5% GDP', 'S$45 / tCO2', '+3.0% YoY', '17.4% CET1', '14.80 (VIX Proxy)', '0.949', '+1.9% YoY'],
+    indicators: [],
+    applicable: {
+      metrics: ['ped','gdp_id','mult','scc','leverage','cobb'],
+      curves: ['c1','c2','c5','c6','c10','c12','c13','c16','c21','c24','c27','c28','c29','c30','c31'],
+      laws: [0,2,3,5,8,9,10],
+      indicators: [0,1,2,3,5,6,8,9,10,11,13,15,16]
+    }
+  }
+};
+
+Object.keys(JURISDICTIONS).forEach(k => {
+  JURISDICTIONS[k].indicators = [...JURISDICTIONS[k].defaultIndicators];
+});
+
+// Helper: Get active lowercase source string with daily date
+function getActiveSourceString(category = 'metrics', indIdx = 0) {
+  const dateStr = getTodayISO();
+  if (currentJurisdiction === 'EU') {
+    const ms = EU_MEMBER_STATES[currentEUMember] || EU_MEMBER_STATES.EU_SUPRA;
+    if (category === 'indicator') {
+      const baseIndSrc = REGION_SOURCES.EU.indicators[indIdx] || 'eurostat';
+      return `default (${dateStr}) • src: ${ms.src} / ${baseIndSrc}`.toLowerCase();
+    }
+    if (category === 'yield') return `default (${dateStr}) • src: ${ms.ncb} / ecb yield curve`.toLowerCase();
+    if (category === 'policy') return `default (${dateStr}) • src: ${ms.euro ? 'ecb governing council' : ms.ncb}`.toLowerCase();
+    if (category === 'cds') return `default (${dateStr}) • src: dtcc / markit (${ms.iso} 5y cds)`.toLowerCase();
+    return `default (${dateStr}) • src: ${ms.src}`.toLowerCase();
+  }
+  const regSrc = REGION_SOURCES[currentJurisdiction] || REGION_SOURCES.EU;
+  if (category === 'indicator') return `default (${dateStr}) • src: ${regSrc.indicators[indIdx] || regSrc.metrics}`.toLowerCase();
+  if (category === 'yield') return `default (${dateStr}) • src: ${regSrc.yield}`.toLowerCase();
+  if (category === 'policy') return `default (${dateStr}) • src: ${regSrc.policy}`.toLowerCase();
+  if (category === 'cds') return `default (${dateStr}) • src: ${regSrc.cds}`.toLowerCase();
+  return `default (${dateStr}) • src: ${regSrc.metrics}`.toLowerCase();
+}
+
+// Render EU Supranational + 27 Member-State Dispersion Bar
+function initEUMemberDispersionBar() {
+  const container = document.getElementById('euMemberPills');
+  if (!container) return;
+  container.innerHTML = Object.values(EU_MEMBER_STATES).map(ms => {
+    const isSupra = ms.code === 'EU_SUPRA';
+    const isBG = ms.code === 'BG';
+    const activeCls = ms.code === currentEUMember ? 'active' : '';
+    const extraCls = isSupra ? 'supranational' : (isBG ? 'bg-new' : '');
+    const label = isSupra
+      ? 'EU SUPRANATIONAL (AGGREGATE)'
+      : (isBG ? 'BG • BULGARIA (EUR 2026)' : `${ms.iso} (${ms.yield10y})`);
+    return `<button type="button" class="eu-ms-btn ${extraCls} ${activeCls}" onclick="setEUMemberState('${ms.code}')" title="${ms.name} — 10Y: ${ms.yield10y} | CDS: ${ms.cdsBps} bps">${label}</button>`;
+  }).join('');
+}
+
+function setEUMemberState(msCode) {
+  currentEUMember = msCode;
+  const ms = EU_MEMBER_STATES[msCode] || EU_MEMBER_STATES.EU_SUPRA;
+  const euJur = JURISDICTIONS.EU;
+
+  euJur.name = msCode === 'EU_SUPRA'
+    ? 'EU SUPRANATIONAL AGGREGATE (ECB / EUROSTAT)'
+    : `EU MEMBER STATE // ${ms.name.toUpperCase()}`;
+  euJur.short = msCode === 'EU_SUPRA' ? 'EU (SUPRA)' : `EU-${ms.iso}`;
+  euJur.currency = ms.currency;
+  euJur.yield10y = ms.yield10y;
+  euJur.policyRate = ms.policyRate;
+  euJur.cdsBps = ms.cdsBps;
+  euJur.defaultIndicators = [...ms.indicators];
+  euJur.indicators = [...ms.indicators];
+
+  // Adjust EU Taylor & GDP scale for member state dispersion
+  const infVal = parseFloat(ms.indicators[2]) || 2.2;
+  const gdpGrowth = parseFloat(ms.indicators[1]) || 1.2;
+  euJur.metrics.taylor.pi = infVal;
+  euJur.metrics.taylor.ygap = Number((gdpGrowth - 1.4).toFixed(1));
+  euJur.metrics.gdp_id.c = Math.max(12, Math.round(8055 * ms.gdpScale));
+  euJur.metrics.gdp_id.i = Math.max(5, Math.round(3136 * ms.gdpScale));
+  euJur.metrics.gdp_id.g = Math.max(5, Math.round(3194 * ms.gdpScale));
+  euJur.metrics.gdp_id.x = Math.max(8, Math.round(7298 * ms.gdpScale));
+  euJur.metrics.gdp_id.m = Math.max(8, Math.round(6858 * ms.gdpScale));
+
+  const bundYield = 2.18;
+  const msYieldNum = parseFloat(ms.yield10y) || 2.42;
+  const spreadVsBund = Math.round((msYieldNum - bundYield) * 100);
+  const spreadStr = spreadVsBund >= 0 ? `+${spreadVsBund} bps` : `${spreadVsBund} bps`;
+
+  const sumEl = document.getElementById('euDispersionSummary');
+  if (sumEl) {
+    sumEl.innerHTML = msCode === 'EU_SUPRA'
+      ? `MODE: EU SUPRANATIONAL AGGREGATE (ECB / EUROSTAT) &bull; 10Y: ${ms.yield10y} (${spreadStr} vs. DE Bund) &bull; CDS: ${ms.cdsBps} bps`
+      : `MEMBER DISPERSION: ${ms.name.toUpperCase()} &bull; 10Y: ${ms.yield10y} (${spreadStr} vs. DE Bund) &bull; POLICY: ${ms.policyRate.toFixed(2)}% &bull; 5Y CDS: ${ms.cdsBps} bps`;
+  }
+
+  const dispBanner = document.getElementById('euMemberDispersionBanner');
+  if (dispBanner) {
+    dispBanner.style.display = currentJurisdiction === 'EU' ? 'block' : 'none';
+    dispBanner.innerHTML = `<strong>EU SUPRANATIONAL vs. MEMBER-STATE DISPERSION TELEMETRY (${getTodayISO()}):</strong> Active Selection: <strong>${ms.name}</strong> | 10Y Sovereign Yield: <strong>${ms.yield10y}</strong> (EU Aggregate: 2.42%, Spread vs. Bund: ${spreadStr}) | HICP Inflation: <strong>${ms.indicators[2]}</strong> (EU Aggregate: 2.2% YoY) | Real GDP Growth: <strong>${ms.indicators[1]}</strong> (EU Aggregate: +1.2% YoY) <span class="src-sub">src: ${ms.src} &bull; ecb convergence &amp; eurostat dispersion matrix (${getTodayISO()})</span>`;
+  }
+
+  initEUMemberDispersionBar();
+  if (currentJurisdiction === 'EU') {
+    setJurisdiction('EU', document.querySelector('.jur-btn.active'));
+  }
+}
+
+// Official Institutional Scenarios
+const CASE_SCENARIOS = {
+  s_default: {
+    group: 'Active Sovereign Region Daily Baseline (Default)',
+    title: 'Active Sovereign Region Daily Baseline (Default)',
+    themeIdx: 'ALL', levG: 0, levI: 0, levC: 0,
+    summary: 'Synchronized with your selected Sovereign Region or EU Member-State’s daily spot FX, 10Y sovereign yields, central bank reaction function, and 17 domestic indicators.'
+  },
+  s_imf2026: {
+    group: '2026 Official Institutional Scenarios (IMF / BIS / Fed / NGFS)',
+    title: 'IMF WEO (Oct 2026): Energy Shock & 4.7% Inflation Re-Acceleration',
+    themeIdx: '0', levG: 10, levI: 125, levC: -30,
+    summary: 'Official IMF Oct 2026 WEO/GFSR baseline: Global growth slows to 3.1%-3.3% while headline inflation rebounds to 4.7% amidst energy supply disruptions ($114 Brent) and 30%-50% input spikes.'
+  },
+  s_bis2026: {
+    group: '2026 Official Institutional Scenarios (IMF / BIS / Fed / NGFS)',
+    title: 'BIS AER (June 2026): AI CapEx Boom vs. Tariff & Fiscal Fragility',
+    themeIdx: '3', levG: 35, levI: 50, levC: 45,
+    summary: 'Official BIS Annual Economic Report 2026: AI ecosystem CapEx offsets bilateral tariff drags, while sovereign debt-service ratios and private-credit leverage heighten bond market fragility.'
+  },
+  s_fed2026: {
+    group: '2026 Official Institutional Scenarios (IMF / BIS / Fed / NGFS)',
+    title: 'Fed DFAST (Feb 2026): Severely Adverse 10% Unemployment & CRE Shock',
+    themeIdx: '4', levG: 60, levI: -200, levC: -40,
+    summary: 'Official Federal Reserve 2026 Supervisory Stress Test: Abrupt risk-appetite collapse pushes unemployment +5.5 pp to 10.0%, widens corporate/CRE spreads, and forces rate cuts.'
+  },
+  s_ngfs_orderly: {
+    group: '2026 Official Institutional Scenarios (IMF / BIS / Fed / NGFS)',
+    title: 'NGFS Phase V / EU CBAM (2026): Net Zero Orderly Carbon Pricing (€88.76)',
+    themeIdx: '2', levG: 40, levI: 0, levC: 55,
+    summary: 'Official NGFS Phase V & EU DG TAXUD 2026 Definitive CBAM Regime: Coordinated carbon pricing (€88.76 EUA + border tariffs) accelerates MAC curve abatement and green grid reinvestment.'
+  },
+  s_ngfs_fragment: {
+    group: '2026 Official Institutional Scenarios (IMF / BIS / Fed / NGFS)',
+    title: 'NGFS Phase V (2026): "Too Little, Too Late" Fragmented Climate Risk',
+    themeIdx: '2', levG: 15, levI: 75, levC: -25,
+    summary: 'Official NGFS Short-Term & Phase V Scenario: Uncoordinated, delayed climate policies expose economies to simultaneous physical weather damages and disorderly transition shocks.'
+  },
+  s_boj_mas2026: {
+    group: '2026 Official Institutional Scenarios (IMF / BIS / Fed / NGFS)',
+    title: 'BoJ GX & MAS S$NEER (2026): Asian Rate Normalization & Trade Shield',
+    themeIdx: '1', levG: 20, levI: 50, levC: 35,
+    summary: 'Official BoJ 2026 Outlook & MAS Review: BoJ normalizes policy rates post-YCC alongside GX Transition Bonds, while MAS maintains an appreciating S$NEER band against imported inflation.'
+  },
+  s_1998: {
+    group: 'Official Historical Archival Benchmarks (FRASER / ECB / BIS / SNB / BoE)',
+    title: 'FRASER (1998): US "Goldilocks" IT Total Factor Productivity Boom',
+    themeIdx: '3', levG: 10, levI: -25, levC: 55,
+    summary: 'Outward LRAS/SRAS shift driven by endogenous IT Total Factor Productivity (A), enabling high real GDP growth with falling NAIRU unemployment.'
+  },
+  s_1997: {
+    group: 'Official Historical Archival Benchmarks (FRASER / ECB / BIS / SNB / BoE)',
+    title: 'IMF Archive (1997): Asian Financial Crisis FX Peg Collapse',
+    themeIdx: '4', levG: -35, levI: 250, levC: -30,
+    summary: 'Impossible Trinity & Financial Accelerator sudden stop: unhedged FX debt and collapsing pegs trigger balance-sheet credit crunches and sovereign CDS spikes.'
+  },
+  s_1981: {
+    group: 'Official Historical Archival Benchmarks (FRASER / ECB / BIS / SNB / BoE)',
+    title: 'FRASER (1981): Volcker Disinflation Shock (Taylor Principle >19%)',
+    themeIdx: '1', levG: 15, levI: 300, levC: -15,
+    summary: 'Aggressive Taylor Principle tightening breaks unanchored inflation expectations (π^e) along the Short-Run Phillips Curve at a high short-term Sacrifice Ratio.'
+  },
+  s_2008: {
+    group: 'Official Historical Archival Benchmarks (FRASER / ECB / BIS / SNB / BoE)',
+    title: 'FRASER / BIS (2008-2010): GFC Liquidity Trap, ZLB & QE1',
+    themeIdx: '1', levG: 75, levI: -200, levC: 0,
+    summary: 'Policy rates hit the Zero Lower Bound (i = 0%) amidst a Financial Accelerator recession; requires large-scale QE balance sheet expansion and fiscal stimulus.'
+  },
+  s_2012_omt: {
+    group: 'Official Historical Archival Benchmarks (FRASER / ECB / BIS / SNB / BoE)',
+    title: 'ECB Archive (2010-2012): Eurozone Sovereign-Bank Nexus & OMT',
+    themeIdx: '4', levG: -45, levI: -100, levC: -25,
+    summary: 'Pro-cyclical austerity at the ZLB widened peripheral spreads until the ECB Outright Monetary Transactions (OMT) backstop restored rational-expectations equilibrium.'
+  },
+  s_2015_snb: {
+    group: 'Official Historical Archival Benchmarks (FRASER / ECB / BIS / SNB / BoE)',
+    title: 'SNB Archive (Jan 2015): EUR/CHF 1.20 Floor Removal & Negative Rates',
+    themeIdx: '6', levG: 0, levI: -75, levC: -15,
+    summary: 'SNB exits the 1.20 EUR/CHF cap and lowers sight-deposit rates to -0.75%, testing Law of One Price (LOOP) exporters and safe-haven UIP flows.'
+  },
+  s_2022_ldi: {
+    group: 'Official Historical Archival Benchmarks (FRASER / ECB / BIS / SNB / BoE)',
+    title: 'BoE FPC Archive (Sept 2022): UK Gilt Market LDI Liquidity Spiral',
+    themeIdx: '4', levG: 65, levI: 150, levC: -30,
+    summary: 'Unfunded fiscal expansion triggered a 100+ bps 30Y Gilt yield spike and forced pension LDI collateral fire-sales, requiring emergency central bank backstops.'
+  }
+};
+
+const THEORY_DOCTRINES = {
+  'The Neoclassical Synthesis': { core: 'Samuelson-Hicks dual regime: sticky prices validate short-run demand stabilization; flexible long-run prices converge to Classical potential Y*.', doctrine: 'Deploy counter-cyclical stabilization in slumps, anchored to long-run supply productivity.' },
+  'Keynesian Income-Expenditure Theory': { core: 'Aggregate expenditure (C+I+G+NX) drives output below capacity; volatile animal spirits and liquidity preference cause involuntary unemployment.', doctrine: 'Prioritizes fiscal multipliers and automatic stabilizers targeted at high-MPC households.' },
+  'Marginal Utility Theory': { core: 'Jevons-Menger-Walras subjective valuation: rational consumers equalize marginal utility per currency unit across goods (MUx/Px = MUy/Py).', doctrine: 'Favors price signals, Pigouvian excise calibration, and direct cash transfers over price ceilings.' },
+  'Theory of the Firm': { core: 'Coase-Marshall optimization: firms minimize factor costs (MRTS = w/r) and maximize profits where MR = MC.', doctrine: 'Audits monopoly markups (P > MC) and deadweight loss for antitrust and natural-monopoly regulation.' },
+  'Theory of Comparative Advantage': { core: 'Ricardo-Heckscher-Ohlin: welfare gains arise when jurisdictions specialize in lowest opportunity cost and abundant factor endowments.', doctrine: 'Supports open trade rules, Purchasing Power Parity (LOOP), and tradable sector competitiveness.' },
+  'Neoclassical Growth Theory (Solow Model)': { core: 'Solow-Swan model: capital deepening hits diminishing returns at steady state k*; sustained per-capita growth requires TFP.', doctrine: 'Prioritizes structural reforms, workforce participation, and Golden-Rule savings calibration.' },
+  'Monetarism (Quantity Theory of Money)': { core: 'Friedman-Schwartz (MV = PY): excess money growth relative to real output drives structural inflation.', doctrine: 'Advocates monetary aggregate discipline and central bank independence.' },
+  'Rational Expectations Theory': { core: 'Lucas-Sargent hypothesis: forward-looking agents price policy rules into expectations immediately (Lucas Critique).', doctrine: 'Demands credible institutional rules and transparent forward guidance to anchor bond yields.' },
+  'Theory of Global Public Goods': { core: 'Samuelson-Nordhaus-Weitzman: non-rival planetary commons require pricing marginal social damages (SCC).', doctrine: 'Justifies statutory Carbon Taxes, ETS caps, and CBAM border tariffs.' },
+  'Endogenous Growth Theory': { core: 'Romer-Lucas: technology (A) and human capital are endogenous non-rival inputs yielding increasing returns.', doctrine: 'Supports AI infrastructure, R&D subsidies, and human capital clusters.' },
+  'Financial Accelerator Theory': { core: 'Bernanke-Gertler-Kiyotaki: falling collateral values widen external finance premiums and trigger pro-cyclical credit crunches.', doctrine: 'Mandates Basel III leverage floors, CCyB buffers, and lender-of-last-resort backstops.' },
+  'Behavioral Economic Theory': { core: 'Kahneman-Tversky-Thaler: bounded rationality, loss aversion, and money illusion drive deviations from homo economicus.', doctrine: 'Uses choice architecture, auto-enrollment savings, and progressive distributional buffers.' },
+  'New Trade Theory': { core: 'Krugman-Melitz: internal economies of scale and network effects drive intra-industry trade and clustering.', doctrine: 'Justifies strategic industrial hubs (semiconductors, maritime/aviation nodes) and single-market scale.' },
+  'Advanced Game Theory (Repeated Games & Risk)': { core: 'Nash-Axelrod-Schelling: repeated cooperation holds when the patience discount factor δ exceeds defection temptation.', doctrine: 'Structures bilateral trade treaties and sovereign covenants around credible Tit-for-Tat reciprocity.' },
+  'New Keynesian Macroeconomics': { core: 'Woodford-Galí DSGE synthesis: monopolistic competition and Calvo price rigidities steered by Taylor-rule interest rates.', doctrine: 'Flexible inflation targeting via Taylor Principle rate adjustments, augmented by QE at the ZLB.' }
+};
+
+const THEMATIC_ENGINE_DATA = {
+  'Macroeconomic Output & Stabilization': {
+    code: 'TH-01',
+    scenarios: {
+      EU: 'EU Recovery & Resilience Facility (RRF) public investment absorption alongside revised EU Fiscal Governance debt-sustainability rules across all 27 Member States.',
+      US: 'Managing US federal fiscal deficit crowding-out against resilient private consumption and industrial CHIPS/IRA capex.',
+      CH: 'Operating Switzerland’s constitutional Debt Brake (Schuldenbremse) while buffering export-sector cyclical slowdowns.',
+      UK: 'Balancing UK Autumn Budget public investment multipliers against gilt market fiscal-headroom constraints.',
+      JP: 'Deploying Japanese supplementary fiscal stimulus to support real wage growth while managing a 250%+ debt-to-GDP ratio.',
+      SG: 'Calibrating Singapore counter-cyclical budget surpluses and CDC household vouchers in an ultra-open trade economy (MPI > 0.5).'
+    },
+    dimensions: [
+      { title: '1. Telemetry Trigger', text: 'Real GDP Output Gap (y - y*) diverging beyond +/-0.5% or Okun’s Law unemployment breach.' },
+      { title: '2. Institutional Constraint', text: 'Sovereign debt-to-GDP ceiling, marginal tax clawback (t), and import leakage (MPI) dampening multiplier k.' },
+      { title: '3. FX & Yield Channel', text: 'Unfunded fiscal expansion widens 10Y term premiums and risks twin-deficit Current Account pressure.' },
+      { title: '4. Participant Justification', text: 'Directing stabilization to bottom-quintile liquidity-constrained households (MPC > 0.75) maximizes domestic GDP traction.' }
+    ]
+  },
+  'Monetary Policy & Central Banking': {
+    code: 'TH-02',
+    scenarios: {
+      EU: 'ECB Governing Council rate calibration and QT (PEPP/APP runoff) while preventing sovereign fragmentation across Eurozone +21 bond spreads (including Bulgaria).',
+      US: 'FOMC terminal rate steering and SOMA balance-sheet runoff while maintaining ample commercial bank reserves above repo stress floors.',
+      CH: 'SNB policy rate and foreign-exchange intervention calibration to prevent excessive safe-haven CHF appreciation.',
+      UK: 'Bank of England MPC rate path and active Gilt sales amidst persistent services wage stickiness.',
+      JP: 'Bank of Japan policy normalization out of the Zero Lower Bound (ZLB) and Yield Curve Control without destabilizing JGB balance sheets.',
+      SG: 'MAS Monetary Policy Statement recalibrating the slope, width, and center of the S$NEER policy band (exchange-rate-centered regime).'
+    },
+    dimensions: [
+      { title: '1. Telemetry Trigger', text: 'Headline CPI / Core inflation gap (π - π*) and 5Y5Y inflation expectations unanchoring.' },
+      { title: '2. Institutional Constraint', text: 'Taylor Principle compliance (Δi > Δπ), Zero Lower Bound (ZLB) floors, and commercial bank excess reserve hoarding (e).' },
+      { title: '3. FX & Yield Channel', text: 'Policy rate differentials immediately re-price spot FX via Uncovered Interest Rate Parity (UIP) and 2Y sovereign yields.' },
+      { title: '4. Participant Justification', text: 'Balances mortgage/SME debt-service costs against fixed-income purchasing power protection.' }
+    ]
+  },
+  'Environmental Economics & Climate Policy': {
+    code: 'TH-03',
+    scenarios: {
+      EU: 'Full EU ETS (€88.76/tCO2) & CBAM border tariff enforcement alongside maritime/aviation decarbonization mandates.',
+      US: 'EPA Social Cost of Carbon ($190/tCO2) regulatory benchmarking vs. clean-energy production tax credits.',
+      CH: 'Swiss CO2 Act levy (CHF 120/tCO2) linked to the EU ETS registry and Alpine hydro/grid resilience.',
+      UK: 'UK ETS allowance price collar calibration (£64/tCO2) and North Sea energy transition pacing.',
+      JP: 'Japan GX (Green Transformation) sovereign transition bonds and phased GX-ETS carbon pricing rollout.',
+      SG: 'Singapore Carbon Tax escalation (S$45/tCO2 rising toward S$50-80) for petrochemical, maritime, and data-center hubs.'
+    },
+    dimensions: [
+      { title: '1. Telemetry Trigger', text: 'Spread between statutory Social Cost of Carbon (SCC) and market ETS price (€88.76) plus Brent ($114.37) energy shocks.' },
+      { title: '2. Institutional Constraint', text: 'Weitzman price-vs-quantity uncertainty trade-off and Ramsey social discount rate (r) sensitivity.' },
+      { title: '3. FX & Yield Channel', text: 'CBAM border adjustments and carbon pricing shift terms-of-trade in favor of low-carbon grid exporters.' },
+      { title: '4. Participant Justification', text: 'Recycles carbon tax revenues into household climate dividends and industrial MAC abatement capex.' }
+    ]
+  },
+  'Long-Term Economic Growth & Productivity': {
+    code: 'TH-04',
+    scenarios: {
+      EU: 'Closing the EU-US Total Factor Productivity (TFP) gap via AI digital infrastructure, capital markets union, and workforce participation.',
+      US: 'Sustaining US AI/cloud R&D endogenous growth spillovers while managing labor-force participation demographics.',
+      CH: 'High-value Swiss pharmaceutical, precision-engineering, and AI R&D cluster productivity preservation.',
+      UK: 'Reversing UK post-GFC productivity stagnation through planning reform, university spinouts, and digital capex.',
+      JP: 'Offsetting Japan’s demographic labor contraction (n < 0) through industrial robotics, AI automation, and female/senior LFPR.',
+      SG: 'Singapore Smart Nation 2.0 AI architecture, human capital upskilling, and high-value semiconductor/biotech capital deepening.'
+    },
+    dimensions: [
+      { title: '1. Telemetry Trigger', text: 'Total Factor Productivity (TFP) Solow residual, Labor Force Participation Rate (LFPR), and HDI trajectory.' },
+      { title: '2. Institutional Constraint', text: 'Law of Diminishing Returns to physical capital (K) when unaccompanied by endogenous R&D innovation (A).' },
+      { title: '3. FX & Yield Channel', text: 'Higher structural TFP raises the neutral real interest rate (r*) and supports long-run real exchange rate appreciation.' },
+      { title: '4. Participant Justification', text: 'Aligns real wage growth with Marginal Product of Labor (MPL) while funding R&D universities and tech architects.' }
+    ]
+  },
+  'Financial Markets & Systemic Risk': {
+    code: 'TH-05',
+    scenarios: {
+      EU: 'ECB/SSM macroprudential stress-testing of Eurozone bank CET1 ratios (15.8%) and sovereign-bank nexus bond portfolios across 27 Member States.',
+      US: 'Monitoring US regional bank commercial real estate (CRE) exposure, Basel III endgame leverage ratios, and Treasury market liquidity.',
+      CH: 'Post-Credit Suisse Swiss "Too Big To Fail" higher CET1 capital adequacy (18.2%) and SNB liquidity backstop reforms.',
+      UK: 'BoE Financial Policy Committee stress-testing pension LDI leverage and gilt repo market resilience.',
+      JP: 'Monitoring Japanese regional bank & life insurer mark-to-market JGB duration risk as 10Y yields rise above 1.0%.',
+      SG: 'MAS macroprudential stress-testing of Asian wealth-management inflows, property cooling LTVs, and D-SIB fortress capital (17.4% CET1).'
+    },
+    dimensions: [
+      { title: '1. Telemetry Trigger', text: '10Y-2Y Yield Curve inversions, VIX spikes (>25), Sovereign 5Y CDS widening, and Tier 1 Leverage Ratio erosion.' },
+      { title: '2. Institutional Constraint', text: 'Goodhart’s Law regulatory gaming of static risk weights and Financial Accelerator collateral fire-sales.' },
+      { title: '3. FX & Yield Channel', text: 'Systemic risk spikes trigger safe-haven FX surges (USD, CHF) and widen corporate credit spreads.' },
+      { title: '4. Participant Justification', text: 'Protects retail depositors and taxpayers from bailouts by enforcing shareholder bail-in equity buffers.' }
+    ]
+  },
+  'Microeconomic Foundations & Consumer Behavior': {
+    code: 'TH-06',
+    scenarios: {
+      EU: 'Digital Markets Act antitrust enforcement alongside targeted household relief against Engel’s Law food/energy inflation.',
+      US: 'FTC/DOJ Big Tech monopoly markup (P > MC) litigation and consumer credit price-elasticity shifts.',
+      CH: 'Administered healthcare/utility price oversight and high-purchasing-power consumer substitution analysis.',
+      UK: 'Ofgem/Ofwat natural-monopoly utility rate regulation and low-income household budget-constraint protection.',
+      JP: 'Corporate price-pass-through behavior shifting from kinked-demand deflationary stickiness to wage-driven pricing.',
+      SG: 'Public transport/aviation hub concession pricing, congestion ERP elasticity, and progressive GST voucher rebates.'
+    },
+    dimensions: [
+      { title: '1. Telemetry Trigger', text: 'Price Elasticity of Demand (PED), Lerner monopoly markups, and Gini Coefficient (income concentration).' },
+      { title: '2. Institutional Constraint', text: 'Law of Supply shortages under statutory price caps and Deadweight Loss (DWL) from uncalibrated excise taxes.' },
+      { title: '3. FX & Yield Channel', text: 'Import price pass-through into domestic CPI basket depends on retail market competition and demand elasticity.' },
+      { title: '4. Participant Justification', text: 'Replaces distortionary blanket price subsidies with direct cash transfers that preserve consumer utility optimization.' }
+    ]
+  },
+  'International Trade & Globalization': {
+    code: 'TH-07',
+    scenarios: {
+      EU: 'Navigating EU-US-China EV/green-tech tariff games, Single Market scale integration, and CBAM trade compliance.',
+      US: 'Strategic semiconductor/critical-mineral tariff policy and US current account deficit (-3.3% GDP) financing.',
+      CH: 'Bilateral Swiss-EU single-market access treaties and high-surplus (+7.6% GDP) pharmaceutical/precision exports.',
+      UK: 'Post-Brexit services trade agreements, Windsor Framework customs flows, and current account deficit management.',
+      JP: 'Weak-Yen export competitiveness, semiconductor supply-chain friend-shoring, and primary income surplus management.',
+      SG: 'Maintaining Singapore’s entrepot & high-tech trade hub status (+18.5% CA surplus) amidst global tariff fragmentation.'
+    },
+    dimensions: [
+      { title: '1. Telemetry Trigger', text: 'Current Account Balance (% GDP), Purchasing Power Parity (LOOP) deviations, and bilateral tariff escalation.' },
+      { title: '2. Institutional Constraint', text: 'Repeated Prisoner’s Dilemma discount factor (δ) governing WTO/bilateral retaliation vs. cooperative equilibrium.' },
+      { title: '3. FX & Yield Channel', text: 'Terms-of-trade shocks and current account imbalances drive structural real exchange rate re-alignments.' },
+      { title: '4. Participant Justification', text: 'Captures New Trade Theory scale economies for domestic exporters while buffering import-dependent consumers.' }
+    ]
+  }
+};
+
+function buildTaxonomyHTML(idSuffix, theme, theoryName) {
+  const doc = THEORY_DOCTRINES[theoryName] || THEORY_DOCTRINES['The Neoclassical Synthesis'];
+  const isOpen = masterTaxonomyOpen ? 'open' : '';
+  const btnClass = masterTaxonomyOpen ? 'on' : '';
+  const btnText = masterTaxonomyOpen ? 'ON' : 'OFF';
+  return `<div class="taxonomy-toggle-bar">
+    <span class="taxonomy-toggle-title">New Neoclassical Synthesis &amp; Mainstream Policy Taxonomy</span>
+    <button class="tax-switch-btn ${btnClass}" id="taxbtn-${idSuffix}" onclick="toggleSingleTaxonomy('${idSuffix}')">EXTENSION: ${btnText}</button>
+  </div>
+  <div class="taxonomy-drawer ${isOpen}" id="taxdrawer-${idSuffix}">
+    <div class="tax-grid">
+      <div class="tax-cell"><span class="lbl">Economic Theme / Application Case</span><p>${theme}</p></div>
+      <div class="tax-cell"><span class="lbl">Foundational Theory</span><p><strong>${theoryName}</strong></p></div>
+      <div class="tax-cell"><span class="lbl">Core Theoretical Mechanism</span><p>${doc.core}</p></div>
+      <div class="tax-cell"><span class="lbl">Mainstream Policy Doctrine &amp; Decision Positioning</span><p>${doc.doctrine}</p></div>
+    </div>
+  </div>`;
+}
+
+function toggleSingleTaxonomy(idSuffix) {
+  const d = document.getElementById(`taxdrawer-${idSuffix}`), b = document.getElementById(`taxbtn-${idSuffix}`);
+  if (!d || !b) return;
+  const open = !d.classList.contains('open');
+  d.classList.toggle('open', open); b.classList.toggle('on', open);
+  b.textContent = `EXTENSION: ${open ? 'ON' : 'OFF'}`;
+}
+
+function toggleMasterTaxonomy() {
+  masterTaxonomyOpen = !masterTaxonomyOpen;
+  document.getElementById('masterTaxBtn').textContent = `TAXONOMY EXTENSION: ${masterTaxonomyOpen ? 'ON' : 'OFF'}`;
+  document.querySelectorAll('.taxonomy-drawer').forEach(d => d.classList.toggle('open', masterTaxonomyOpen));
+  document.querySelectorAll('.tax-switch-btn').forEach(b => { b.classList.toggle('on', masterTaxonomyOpen); b.textContent = `EXTENSION: ${masterTaxonomyOpen ? 'ON' : 'OFF'}`; });
+}
+
+const METRICS_DATA = [
+  { id: 'ped', name: '1. Price Elasticity of Demand (PED)', formula: 'PED = (%ΔQd) / (%ΔP) = (ΔQ / ΔP) * (P / Q)', theory: 'Marginal Utility Theory', theme: 'Microeconomic Foundations & Consumer Behavior', scenario: 'Excise Tax & Transport/Utility Surcharge Assessment: Evaluating a 15% price hike vs. green electrification subsidies.', methodology: 'Quantifies consumer price responsiveness to select between Pigouvian behavioral taxation (|PED| > 1) and Ramsey revenue generation (|PED| < 1).', participants: 'Households & Commuters, Transport/Utility Operators, Ministry of Finance Revenue Desk.', inputs: [{ id: 'p1', label: 'Initial Price (P0)', min: 1, max: 250, step: 0.05, val: 1.85 }, { id: 'p2', label: 'New Policy Price (P1)', min: 1, max: 250, step: 0.05, val: 2.10 }, { id: 'q1', label: 'Initial Demand (Q0 M Units)', min: 10, max: 500, step: 1, val: 120 }, { id: 'q2', label: 'New Demand (Q1 M Units)', min: 10, max: 500, step: 1, val: 112 }], compute: (v) => { const pctQ = (v.q2 - v.q1) / ((v.q2 + v.q1) / 2), pctP = (v.p2 - v.p1) / ((v.p2 + v.p1) / 2), ped = pctP === 0 ? 0 : pctQ / pctP, cur = JURISDICTIONS[currentJurisdiction].currency; return { primary: ped.toFixed(2), sub: `Revenue Shift: ${cur}${(v.p1*v.q1).toFixed(1)}M to ${cur}${(v.p2*v.q2).toFixed(1)}M`, verdict: Math.abs(ped) < 1 ? 'INELASTIC (|PED| < 1): Tax incidence falls on consumers; sovereign revenue increases.' : 'ELASTIC (|PED| >= 1): Strong substitution; high deadweight loss if overtaxed.' }; } },
+  { id: 'gdp_id', name: '2. GDP Identity (Expenditure Approach)', formula: 'Y = C + I + G + (X - M)', theory: 'The Neoclassical Synthesis', theme: 'Macroeconomic Output & Stabilization', scenario: 'National Accounts & External Rebalancing: Evaluating whether public investment (G) and exports (X) offset import leakage (M) and high-rate CapEx cooling (I).', methodology: 'Decomposes aggregate output into domestic absorption (C+I+G) and Net Exports (X-M) to diagnose twin-deficit risks.', participants: 'Domestic Households (C), Corporate CapEx Planners (I), Sovereign Treasury (G), Export/Import Sector (NX).', inputs: [{ id: 'c', label: 'Consumption (C Bn)', min: 5, max: 22000, step: 5, val: 8055 }, { id: 'i', label: 'Gross Investment (I Bn)', min: 5, max: 6000, step: 5, val: 3136 }, { id: 'g', label: 'Gov Spending (G Bn)', min: 5, max: 6000, step: 5, val: 3194 }, { id: 'x', label: 'Exports (X Bn)', min: 5, max: 8000, step: 5, val: 7298 }, { id: 'm', label: 'Imports (M Bn)', min: 5, max: 8000, step: 5, val: 6858 }], compute: (v) => { const cur = JURISDICTIONS[currentJurisdiction].currency, nx = v.x - v.m, y = v.c + v.i + v.g + nx; return { primary: `${cur}${y.toLocaleString()} Bn`, sub: `Consumption: ${((v.c/y)*100).toFixed(1)}% | Net Exports (NX): ${cur}${nx} Bn (${((nx/y)*100).toFixed(1)}% GDP)`, verdict: nx < 0 ? 'EXTERNAL DEFICIT WATCH: Negative Net Exports require foreign capital inflows.' : 'EXTERNAL SURPLUS: Net exporter accumulating external claims.' }; } },
+  { id: 'mult', name: '3. The Spending Multiplier', formula: 'k = 1 / [ 1 - MPC * (1 - t) + MPI ]', theory: 'Keynesian Income-Expenditure Theory', theme: 'Macroeconomic Output & Stabilization', scenario: 'Public Infrastructure & Transit Fiscal Package: Estimating net GDP expansion accounting for tax clawbacks (t) and import leakage (MPI).', methodology: 'Calculates open-economy fiscal traction per unit of public spending, preventing closed-economy overestimation.', participants: 'Liquidity-Constrained Workers (MPC), Domestic Contractors, Foreign Suppliers (MPI).', inputs: [{ id: 'dg', label: 'Fiscal Injection (ΔG Bn)', min: 1, max: 500, step: 1, val: 65 }, { id: 'mpc', label: 'Marginal Propensity to Consume (MPC)', min: 0.2, max: 0.95, step: 0.01, val: 0.72 }, { id: 'tax', label: 'Effective Tax Rate (t)', min: 0.05, max: 0.5, step: 0.01, val: 0.28 }, { id: 'mpi', label: 'Marginal Propensity to Import (MPI)', min: 0.0, max: 0.7, step: 0.01, val: 0.22 }], compute: (v) => { const cur = JURISDICTIONS[currentJurisdiction].currency, k = 1 / (1 - (v.mpc * (1 - v.tax)) + v.mpi); return { primary: `${k.toFixed(2)}x (ΔY = ${cur}${(v.dg*k).toFixed(1)} Bn)`, sub: `Closed-Economy: ${(1/(1-v.mpc)).toFixed(2)}x | Open-Economy Adjusted: ${k.toFixed(2)}x`, verdict: k >= 1.4 ? 'HIGH FISCAL TRACTION: Multiplier justifies targeted public investment.' : 'LEAKAGE ALERT: High import/tax leakage dampens domestic multiplier.' }; } },
+  { id: 'qtm', name: '4. Quantity Theory of Money (Equation of Exchange)', formula: 'M * V = P * Y  =>  P = (M * V) / Y', theory: 'Monetarism (Quantity Theory of Money)', theme: 'Monetary Policy & Central Banking', scenario: 'Broad Money & Velocity Audit: Diagnosing how M2 liquidity and velocity (V) interact with real output capacity (Y).', methodology: 'Separates monetary-overhang inflation from real supply bottlenecks.', participants: 'Central Bank Governing Council, Commercial Depositors, Bondholders.', inputs: [{ id: 'm', label: 'Broad Money Supply M2 (Trn)', min: 0.2, max: 35, step: 0.05, val: 15.5 }, { id: 'v', label: 'Velocity of Money (V)', min: 0.5, max: 2.5, step: 0.01, val: 1.18 }, { id: 'y', label: 'Real GDP Capacity Index (Y)', min: 0.2, max: 35, step: 0.05, val: 14.8 }], compute: (v) => { const p = (v.m * v.v) / v.y; return { primary: `P Index = ${p.toFixed(3)}`, sub: `Implied Nominal Output (M*V): ${(v.m*v.v).toFixed(2)} Units`, verdict: p > 1.25 ? 'MONETARY OVERHANG: M*V exceeds Real Output capacity (Y).' : 'PRICE STABILITY EQUILIBRIUM: Monetary aggregates aligned with real output.' }; } },
+  { id: 'mmult', name: '5. Money Multiplier', formula: 'mm = (1 + c) / (r + e + c)  |  M = mm * MB', theory: 'Monetarism (Quantity Theory of Money)', theme: 'Monetary Policy & Central Banking', scenario: 'Commercial Bank Credit Transmission: Measuring how Monetary Base (MB) translates into M2 when banks hoard excess reserves (e).', methodology: 'Incorporates currency drain (c), required reserves (r), and excess reserves (e).', participants: 'Central Bank Operations Desk, Commercial Banks, Non-Bank Public.', inputs: [{ id: 'mb', label: 'Monetary Base MB (Trn)', min: 0.1, max: 10, step: 0.05, val: 4.4 }, { id: 'r', label: 'Required Reserve Ratio (r)', min: 0.0, max: 0.20, step: 0.005, val: 0.01 }, { id: 'e', label: 'Excess Reserve Ratio (e)', min: 0.01, max: 0.35, step: 0.01, val: 0.11 }, { id: 'c', label: 'Currency-to-Deposit Ratio (c)', min: 0.05, max: 0.40, step: 0.01, val: 0.14 }], compute: (v) => { const mm = (1 + v.c) / (v.r + v.e + v.c); return { primary: `${mm.toFixed(2)}x (M2 = ${(mm*v.mb).toFixed(2)} Trn)`, sub: `Behavioral Adjusted Multiplier: ${mm.toFixed(2)}x`, verdict: v.e > 0.10 ? 'EXCESS RESERVE HOARDING: Liquidity parked at central bank dampens credit creation.' : 'ACTIVE CREDIT CHANNEL: Strong commercial lending transmission.' }; } },
+  { id: 'taylor', name: '6. Taylor Rule (Central Bank Reaction Function)', formula: 'i = r* + π + 0.5(π - π*) + 0.5(y - y*)', theory: 'New Keynesian Macroeconomics', theme: 'Monetary Policy & Central Banking', scenario: 'Central Bank Rate Decision: Calibrating the nominal policy rate (i) given current inflation (π) and the output gap (y - y*).', methodology: 'Enforces the Taylor Principle (Δi > Δπ) to steer real interest rates and anchor expectations.', participants: 'Monetary Policy Committee, Corporate Borrowers, FX Carry Traders.', inputs: [{ id: 'rstar', label: 'Neutral Real Rate (r* %)', min: -0.5, max: 3.0, step: 0.05, val: 0.75 }, { id: 'pi', label: 'Current Inflation (π %)', min: -1.0, max: 10.0, step: 0.1, val: 2.2 }, { id: 'pistar', label: 'Target Inflation (π* %)', min: 1.0, max: 3.0, step: 0.1, val: 2.0 }, { id: 'ygap', label: 'Output Gap (y - y* %)', min: -5.0, max: 5.0, step: 0.1, val: -0.1 }], compute: (v) => { const i = v.rstar + v.pi + 0.5 * (v.pi - v.pistar) + 0.5 * v.ygap, act = JURISDICTIONS[currentJurisdiction].policyRate; return { primary: `${i.toFixed(2)}%`, sub: `Implied Real Rate: ${(i - v.pi).toFixed(2)}% | Region Policy Rate: ${act.toFixed(2)}%`, verdict: i > act + 0.5 ? 'HAWKISH SIGNAL: Taylor Rule prescribes higher policy rate than current stance.' : i < act - 0.5 ? 'DOVISH ROOM: Scope for rate cuts toward neutral.' : 'CALIBRATED ALIGNMENT: Within +/-50 bps of Taylor prescription.' }; } },
+  { id: 'chain_gdp', name: '7. Chain-Weighted Real GDP (Fisher Ideal Index)', formula: 'Q_Fisher = sqrt( Q_Laspeyres * Q_Paasche )', theory: 'The Neoclassical Synthesis', theme: 'Macroeconomic Output & Stabilization', scenario: 'National Accounts Deflator Audit: Removing substitution bias across shifting energy and tech baskets.', methodology: 'Geometric mean of base-period (Laspeyres) and current-period (Paasche) quantity indices.', participants: 'Statistical Agencies (Eurostat/BEA/Cabinet Office), Debt Auditors.', inputs: [{ id: 'lasp', label: 'Laspeyres Quantity Growth (%)', min: -5.0, max: 10.0, step: 0.1, val: 1.4 }, { id: 'paas', label: 'Paasche Quantity Growth (%)', min: -5.0, max: 10.0, step: 0.1, val: 1.0 }], compute: (v) => { const fisher = (Math.sqrt((1 + v.lasp/100) * (1 + v.paas/100)) - 1) * 100; return { primary: `${fisher.toFixed(2)}%`, sub: `Substitution Bias Removed: ${(v.lasp - fisher).toFixed(2)}%`, verdict: 'FISHER IDEAL VERIFIED: Eliminates relative-price substitution distortion.' }; } },
+  { id: 'scc', name: '8. Social Cost of Carbon (SCC)', formula: 'SCC_t = Sum [ Marginal_Damage_(t+k) / (1 + r)^k ]', theory: 'Theory of Global Public Goods', theme: 'Environmental Economics & Climate Policy', scenario: 'Carbon Tax & CBAM Tariff Calibration: Setting statutory shadow carbon prices across Ramsey discount rates.', methodology: 'Discounts future climate GDP damages back to present value.', participants: 'Heavy Industry & Maritime/Aviation, Renewable Utilities, Ministries of Environment.', inputs: [{ id: 'dmg', label: 'Base Annual Marginal Damage (per tCO2)', min: 2, max: 20, step: 0.1, val: 5.4 }, { id: 'r', label: 'Social Discount Rate (r %)', min: 0.5, max: 6.0, step: 0.05, val: 2.0 }, { id: 'g', label: 'Damage Escalation Rate (% yr)', min: 0.0, max: 2.0, step: 0.05, val: 0.8 }], compute: (v) => { const cur = JURISDICTIONS[currentJurisdiction].currency, netR = Math.max(0.002, (v.r - v.g)/100), scc = v.dmg * (1 - Math.pow(1 + netR, -100)) / netR; return { primary: `${cur}${scc.toFixed(2)} / tCO2`, sub: `EU ETS (EUA) Benchmark: €88.76 / tCO2`, verdict: scc > 88.76 ? 'ABATEMENT GAP: Computed SCC exceeds €88.76 market price; justifies green capex subsidies.' : 'MARKET INTERNALIZED: Allowance price covers computed social damage.' }; } },
+  { id: 'leverage', name: '9. Bank Leverage Ratio & Basel III Adequacy', formula: 'Leverage Ratio = (Tier 1 Capital / Total Exposure) * 100', theory: 'Financial Accelerator Theory', theme: 'Financial Markets & Systemic Risk', scenario: 'Systemic Banking Prudential Stress Test: Auditing Tier 1 capital resilience against bond spread widening.', methodology: 'Enforces a non-risk-weighted capital backstop against Financial Accelerator credit crunches.', participants: 'Prudential Supervisors (SSM/Fed/FINMA/MAS), Commercial Banks.', inputs: [{ id: 't1', label: 'Tier 1 Equity Capital (Bn)', min: 10, max: 300, step: 1, val: 82 }, { id: 'exp', label: 'Total Consolidated Exposure (Bn)', min: 200, max: 4000, step: 10, val: 1320 }], compute: (v) => { const lr = (v.t1 / v.exp) * 100; return { primary: `${lr.toFixed(2)}% (${(v.exp/v.t1).toFixed(1)}x Assets/Equity)`, sub: `Basel III Floor: 3.0% | G-SIB Buffer: 5.0%`, verdict: lr < 3.0 ? 'PRUDENTIAL BREACH (<3%): Mandatory capital conservation.' : lr < 5.0 ? 'ADEQUATE BASELINE: Compliant with 3% floor; monitor G-SIB buffer.' : 'FORTRESS SOLVENCY (>5%): Strong loss-absorption capacity.' }; } },
+  { id: 'cobb', name: '10. Cobb-Douglas Production Function', formula: 'Y = A * K^α * L^(1 - α)', theory: 'Neoclassical Growth Theory (Solow Model)', theme: 'Long-Term Economic Growth & Productivity', scenario: 'National AI & Digital Transformation Strategy: Comparing output gains from capital deepening (K) vs. TFP innovation (A).', methodology: 'Quantifies supply-side potential GDP and marginal products (MPK, MPL).', participants: 'AI Systems Architects & R&D Labs (A), Institutional Investors (K), Workforce (L).', inputs: [{ id: 'a', label: 'Total Factor Productivity (A)', min: 1.0, max: 10.0, step: 0.1, val: 3.2 }, { id: 'k', label: 'Capital Stock Index (K)', min: 50, max: 500, step: 5, val: 175 }, { id: 'l', label: 'Labor Input Index (L)', min: 50, max: 500, step: 5, val: 145 }, { id: 'alpha', label: 'Capital Output Elasticity (α)', min: 0.15, max: 0.60, step: 0.01, val: 0.35 }], compute: (v) => { const y = v.a * Math.pow(v.k, v.alpha) * Math.pow(v.l, 1 - v.alpha); return { primary: `Y* = ${y.toFixed(1)} Units`, sub: `MPK: ${(v.alpha*(y/v.k)).toFixed(3)} | MPL: ${((1-v.alpha)*(y/v.l)).toFixed(3)}`, verdict: 'SUPPLY-SIDE POTENTIAL: Factor shares anchored by marginal productivities.' }; } }
+];
+
+const CURVES_DATA = [
+  { id: 'c1', name: '1. Production-Possibility Frontier (PPF)', cat: 'Micro', theory: 'Theory of Comparative Advantage', theme: 'Long-Term Economic Growth & Productivity', desc: 'Concave frontier mapping opportunity cost between Capital Infrastructure and Green Services.', scenario: 'Sovereign RRF / National CapEx Allocation.', paramLabel: 'TFP / Frontier Expansion', type: 'ppf' },
+  { id: 'c2', name: '2. Supply and Demand Curves', cat: 'Micro', theory: 'Marginal Utility Theory', theme: 'Microeconomic Foundations & Consumer Behavior', desc: 'Marshallian cross identifying market-clearing (P*, Q*), surplus, and tax wedges.', scenario: 'Retail Energy Price Cap & Excise Incidence.', paramLabel: 'Demand / Supply Shock Shift', type: 'sd' },
+  { id: 'c3', name: '3. Indifference Curves', cat: 'Micro', theory: 'Marginal Utility Theory', theme: 'Microeconomic Foundations & Consumer Behavior', desc: 'Convex iso-utility curves where slope equals Marginal Rate of Substitution (MRS).', scenario: 'Direct Cash Transfers vs. In-Kind Vouchers.', paramLabel: 'Utility Level Shift', type: 'sd' },
+  { id: 'c4', name: '4. Budget Constraint Line', cat: 'Micro', theory: 'Marginal Utility Theory', theme: 'Microeconomic Foundations & Consumer Behavior', desc: 'Linear feasibility boundary (Px*X + Py*Y = I) pivoting under VAT/GST or tariff reforms.', scenario: 'Differential VAT/GST Reform on Essentials.', paramLabel: 'Relative Price Ratio Pivot', type: 'sd' },
+  { id: 'c5', name: '5. Isocost and Isoquant Lines', cat: 'Micro', theory: 'Theory of the Firm', theme: 'Long-Term Economic Growth & Productivity', desc: 'Cost-minimizing tangency where MRTS = w/r.', scenario: 'AI Automation & Robotics vs. Labor Costs.', paramLabel: 'Wage-to-Rental Ratio (w/r)', type: 'sd' },
+  { id: 'c6', name: '6. Total, Average, and Marginal Cost Curves', cat: 'Micro', theory: 'Theory of the Firm', theme: 'Microeconomic Foundations & Consumer Behavior', desc: 'U-shaped ATC, AVC, and MC intersecting at minimum efficient scale.', scenario: 'Transit & Semiconductor Minimum Efficient Scale Audit.', paramLabel: 'Energy & Fixed Cost Shift', type: 'sd' },
+  { id: 'c7', name: '7. Perfect Competition Equilibrium Diagram', cat: 'Micro', theory: 'Theory of the Firm', theme: 'Microeconomic Foundations & Consumer Behavior', desc: 'Horizontal demand (P = MR = AR) intersecting MC; zero long-run rent at min(ATC).', scenario: 'Wholesale Commodity & Power Markets.', paramLabel: 'Market Clearing Price (P)', type: 'sd' },
+  { id: 'c8', name: '8. Monopoly Pricing Diagram', cat: 'Micro', theory: 'Theory of the Firm', theme: 'Microeconomic Foundations & Consumer Behavior', desc: 'Profit maximization at MR = MC with markup P > MC generating Deadweight Loss.', scenario: 'Port/Airport Concession & Big Tech Antitrust.', paramLabel: 'Markup / Marginal Cost Shift', type: 'sd' },
+  { id: 'c9', name: '9. Kinked Demand Curve', cat: 'Micro', theory: 'Advanced Game Theory (Repeated Games & Risk)', theme: 'Microeconomic Foundations & Consumer Behavior', desc: 'Oligopoly demand kinked at P* creating vertical MR discontinuity and price stickiness.', scenario: 'Retail Banking & Telecom Oligopoly Pricing.', paramLabel: 'Marginal Cost Band Shift', type: 'sd' },
+  { id: 'c10', name: '10. Edgeworth Box', cat: 'Micro', theory: 'Theory of Comparative Advantage', theme: 'International Trade & Globalization', desc: 'General equilibrium box plotting Pareto-optimal Contract Curve (MRS_A = MRS_B).', scenario: 'Bilateral Energy Grid & Mineral Quota Swap.', paramLabel: 'Endowment & Bargaining Shift', type: 'sd' },
+  { id: 'c11', name: '11. Lorenz Curve', cat: 'Macro', theory: 'Behavioral Economic Theory', theme: 'Macroeconomic Output & Stabilization', desc: 'Cumulative income share vs. population percentile relative to 45° equality line.', scenario: 'Progressive Tax & Social Dividend Audit.', paramLabel: 'Redistributive Transfer Intensity', type: 'lorenz' },
+  { id: 'c12', name: '12. Marginal Revenue Product (MRP) Diagram', cat: 'Micro', theory: 'Theory of the Firm', theme: 'Microeconomic Foundations & Consumer Behavior', desc: 'Factor demand (MRP_L = MP_L * MR) determining employment at MRP_L = Wage.', scenario: 'Statutory Wage Floor & High-Skill Productivity.', paramLabel: 'Labor Productivity Shift', type: 'sd' },
+  { id: 'c13', name: '13. Aggregate Supply & Aggregate Demand (AS-AD)', cat: 'Macro', theory: 'The Neoclassical Synthesis', theme: 'Macroeconomic Output & Stabilization', desc: 'Downward AD, upward SRAS, and vertical LRAS diagnosing demand-pull vs. cost-push stagflation.', scenario: 'Brent Oil Shock ($114/Bbl) + Fiscal Stabilization.', paramLabel: 'AD Stimulus / SRAS Shock', type: 'asad' },
+  { id: 'c14', name: '14. Keynesian Cross (45-Degree Line)', cat: 'Macro', theory: 'Keynesian Income-Expenditure Theory', theme: 'Macroeconomic Output & Stabilization', desc: 'Planned Expenditure intersecting 45° Y=PE line to quantify output gaps.', scenario: 'Counter-Cyclical Public Investment Package.', paramLabel: 'Autonomous Spending (ΔG)', type: 'sd' },
+  { id: 'c15', name: '15. Consumption and Saving Function Curves', cat: 'Macro', theory: 'Keynesian Income-Expenditure Theory', theme: 'Macroeconomic Output & Stabilization', desc: 'Dual mapping of C = c0 + c1*Yd and S = -c0 + (1-c1)*Yd.', scenario: 'Household Excess Savings & Precautionary Thrift.', paramLabel: 'MPC Slope (c1)', type: 'sd' },
+  { id: 'c16', name: '16. Investment Demand Curve (MEI)', cat: 'Macro', theory: 'The Neoclassical Synthesis', theme: 'Long-Term Economic Growth & Productivity', desc: 'Downward Marginal Efficiency of Investment relating real rate (r) to CapEx (I).', scenario: 'Rate Cut Transmission into Green CapEx.', paramLabel: 'Real Rate / Return Shift', type: 'sd' },
+  { id: 'c17', name: '17. Money Supply and Money Demand Curves', cat: 'Macro', theory: 'Monetarism (Quantity Theory of Money)', theme: 'Monetary Policy & Central Banking', desc: 'Vertical MS and downward MD(Y, i) determining money-market clearing rate.', scenario: 'Central Bank Liquidity & Repo Steering.', paramLabel: 'Money Supply (MS) Shift', type: 'sd' },
+  { id: 'c18', name: '18. Phillips Curve (Short-Run and Long-Run)', cat: 'Macro', theory: 'New Keynesian Macroeconomics', theme: 'Monetary Policy & Central Banking', desc: 'Downward SRPC shifting with expected inflation (π^e) around vertical LRPC at NAIRU.', scenario: 'Disinflation Sacrifice Ratio & Wage Anchoring.', paramLabel: 'Inflation Expectations (π^e)', type: 'phillips' },
+  { id: 'c19', name: '19. Laffer Curve', cat: 'Macro', theory: 'The Neoclassical Synthesis', theme: 'Macroeconomic Output & Stabilization', desc: 'Inverted-U curve mapping tax rate (t) to revenue (T).', scenario: 'Corporate & Top-Bracket Tax Optimization.', paramLabel: 'Statutory Tax Rate (t %)', type: 'laffer' },
+  { id: 'c20', name: '20. IS-LM Curves', cat: 'Macro', theory: 'The Neoclassical Synthesis', theme: 'Macroeconomic Output & Stabilization', desc: 'Simultaneous goods (IS) and money (LM) equilibrium measuring crowding-out.', scenario: 'Fiscal Expansion + Monetary Tightening Mix.', paramLabel: 'IS Fiscal vs. LM Shift', type: 'sd' },
+  { id: 'c21', name: '21. Solow Economic Growth Model Diagram', cat: 'Macro', theory: 'Neoclassical Growth Theory (Solow Model)', theme: 'Long-Term Economic Growth & Productivity', desc: 'Per-worker investment s*f(k) vs. break-even depreciation (δ+n+g)k.', scenario: 'Demographic Aging (n) & Savings Reform.', paramLabel: 'Savings Rate (s) & TFP', type: 'solow' },
+  { id: 'c22', name: '22. Zero Lower Bound (ZLB) Diagram', cat: 'Macro', theory: 'New Keynesian Macroeconomics', theme: 'Monetary Policy & Central Banking', desc: 'IS-LM / AD kink where nominal rates hit i = 0% (Liquidity Trap).', scenario: 'BoJ / SNB ZLB Normalization & QE Exit.', paramLabel: 'Demand Shock in ZLB Regime', type: 'sd' },
+  { id: 'c23', name: '23. Taylor Rule Curve', cat: 'Macro', theory: 'New Keynesian Macroeconomics', theme: 'Monetary Policy & Central Banking', desc: 'Upward reaction schedule with slope > 1 guaranteeing real rate tightening.', scenario: 'Central Bank Taylor Principle Compliance.', paramLabel: 'Output Gap / Neutral Rate Shift', type: 'sd' },
+  { id: 'c24', name: '24. Yield Curve (Term Structure)', cat: 'Quant', theory: 'Rational Expectations Theory', theme: 'Financial Markets & Systemic Risk', desc: 'Sovereign yield plot across maturities (3M to 30Y).', scenario: 'Sovereign Issuance & Term Premium Audit.', paramLabel: 'Short-End Policy / Term Twist', type: 'yield' },
+  { id: 'c25', name: '25. Quantitative Easing (QE) Central Bank Balance Sheet', cat: 'Quant', theory: 'New Keynesian Macroeconomics', theme: 'Monetary Policy & Central Banking', desc: 'Asset-Liability T-account tracking sovereign bond holdings vs. Bank Reserves.', scenario: 'QT Runoff Pace & Ample Reserves Floor.', paramLabel: 'QE / QT Balance Sheet Scale', type: 'qe' },
+  { id: 'c26', name: '26. Financial Accelerator / Credit Crunch AS-AD Shifts', cat: 'Quant', theory: 'Financial Accelerator Theory', theme: 'Financial Markets & Systemic Risk', desc: 'Collateral writedowns widen external finance premiums, shifting AD and SRAS inward.', scenario: 'CRE & Sovereign-Bank Nexus Stress Test.', paramLabel: 'Credit Spread / Collateral Shock', type: 'asad' },
+  { id: 'c27', name: '27. Marginal Abatement Cost (MAC) Curve', cat: 'Env', theory: 'Theory of Global Public Goods', theme: 'Environmental Economics & Climate Policy', desc: 'Merit-order decarbonization curve benchmarked against carbon prices.', scenario: 'Net-Zero Pathway & Maritime/Grid Abatement.', paramLabel: 'Carbon Price Threshold', type: 'sd' },
+  { id: 'c28', name: '28. Climate Damage Function Diagram', cat: 'Env', theory: 'Theory of Global Public Goods', theme: 'Environmental Economics & Climate Policy', desc: 'Convex non-linear curve mapping warming (ΔT °C) to % GDP loss.', scenario: 'NGFS Sovereign Climate Stress Testing.', paramLabel: 'Warming Trajectory (ΔT °C)', type: 'clim_dmg' },
+  { id: 'c29', name: '29. Cap-and-Trade vs. Carbon Tax Supply-Demand', cat: 'Env', theory: 'Theory of Global Public Goods', theme: 'Environmental Economics & Climate Policy', desc: 'Weitzman (1974) vertical quantity cap vs. horizontal tax under uncertainty.', scenario: 'ETS Allowance Collar vs. Fixed Carbon Levy.', paramLabel: 'Industrial Abatement Demand Shock', type: 'sd' },
+  { id: 'c30', name: '30. Repeated Prisoner’s Dilemma Game Trees', cat: 'Game', theory: 'Advanced Game Theory (Repeated Games & Risk)', theme: 'International Trade & Globalization', desc: 'Sequential game tree evaluating Grim Trigger / Tit-for-Tat cooperation.', scenario: 'Bilateral Tariff & Green Subsidy Equilibrium.', paramLabel: 'Patience Discount Factor (δ)', type: 'gametree' },
+  { id: 'c31', name: '31. New Trade Theory Returns-to-Scale Curve', cat: 'Trade', theory: 'New Trade Theory', theme: 'International Trade & Globalization', desc: 'Downward average cost (CC) and upward competition markup (PP) under market integration.', scenario: 'Single Market & Regional Tech Hub Scale.', paramLabel: 'Market Integration Scale (S)', type: 'sd' }
+];
+
+const INDICATOR_META = [
+  { name: '1. Gross Domestic Product (GDP)', theory: 'Keynesian Income-Expenditure Theory', theme: 'Macroeconomic Output & Stabilization', note: 'Nominal market value of final output; denominator for sovereign debt-to-GDP.' },
+  { name: '2. Real GDP Growth', theory: 'The Neoclassical Synthesis', theme: 'Macroeconomic Output & Stabilization', note: 'Inflation-adjusted volume growth tracking business cycle expansions.' },
+  { name: '3. Consumer Price Index (CPI / HICP)', theory: 'Monetarism (Quantity Theory of Money)', theme: 'Monetary Policy & Central Banking', note: 'Headline household cost-of-living index governing wage and pension indexation.' },
+  { name: '4. Producer Price Index (PPI)', theory: 'Theory of the Firm', theme: 'Monetary Policy & Central Banking', note: 'Upstream factory-gate price index leading headline CPI by 3-6 months.' },
+  { name: '5. GDP Deflator', theory: 'The Neoclassical Synthesis', theme: 'Macroeconomic Output & Stabilization', note: '(Nominal/Real GDP)*100 covering all domestically produced goods and services.' },
+  { name: '6. Unemployment Rate', theory: 'New Keynesian Macroeconomics', theme: 'Macroeconomic Output & Stabilization', note: 'Benchmarked against NAIRU to gauge labor slack vs. wage-push inflation.' },
+  { name: '7. Labor Force Participation Rate', theory: 'Neoclassical Growth Theory (Solow Model)', theme: 'Long-Term Economic Growth & Productivity', note: 'Tracks active workforce supply and demographic aging.' },
+  { name: '8. Broad Money Supply (M2 / M4)', theory: 'Monetarism (Quantity Theory of Money)', theme: 'Monetary Policy & Central Banking', note: 'Measures commercial banking liquidity creation and deposit velocity.' },
+  { name: '9. Current Account Balance (% GDP)', theory: 'Theory of Comparative Advantage', theme: 'International Trade & Globalization', note: 'Trade balance + net factor income; tracks external surplus or deficit.' },
+  { name: '10. Gini Coefficient', theory: 'Behavioral Economic Theory', theme: 'Microeconomic Foundations & Consumer Behavior', note: '0 (equality) to 1 (inequality); higher readings depress aggregate MPC.' },
+  { name: '11. Green GDP (eaNDP)', theory: 'Theory of Global Public Goods', theme: 'Environmental Economics & Climate Policy', note: 'NDP adjusted for resource depletion and ecological degradation.' },
+  { name: '12. Social Cost of Carbon / Carbon Price', theory: 'Theory of Global Public Goods', theme: 'Environmental Economics & Climate Policy', note: 'Statutory carbon levy / ETS allowance benchmark per tCO2.' },
+  { name: '13. Chain-Weighted Real GDP / Chained CPI', theory: 'Marginal Utility Theory', theme: 'Macroeconomic Output & Stabilization', note: 'Fisher Ideal geometric chaining eliminating substitution bias.' },
+  { name: '14. Bank Leverage & CET1 Adequacy', theory: 'Financial Accelerator Theory', theme: 'Financial Markets & Systemic Risk', note: 'Basel III Common Equity Tier 1 buffer protecting against credit crunches.' },
+  { name: '15. Volatility Index (VIX / VSTOXX / JNIV)', theory: 'Advanced Game Theory (Repeated Games & Risk)', theme: 'Financial Markets & Systemic Risk', note: '30-day option-implied market volatility tracking tail-risk.' },
+  { name: '16. Human Development Index (HDI)', theory: 'Endogenous Growth Theory', theme: 'Long-Term Economic Growth & Productivity', note: 'Geometric composite of life expectancy, education, and log GNI.' },
+  { name: '17. Total Factor Productivity (TFP)', theory: 'Endogenous Growth Theory', theme: 'Long-Term Economic Growth & Productivity', note: 'Solow residual capturing AI adoption and institutional efficiency.' }
+];
+
+const LAWS_DATA = [
+  { name: '1. Law of Downward-Sloping Demand', theory: 'Marginal Utility Theory', theme: 'Microeconomic Foundations & Consumer Behavior', rule: 'Ceteris paribus, ∂Qd/∂P < 0 via income and substitution effects.', policy: 'Validates Pigouvian carbon/excise taxes and dynamic congestion pricing.' },
+  { name: '2. Law of Diminishing Marginal Utility', theory: 'Marginal Utility Theory', theme: 'Microeconomic Foundations & Consumer Behavior', rule: '∂²U/∂C² < 0; each additional currency unit yields smaller utility increments.', policy: 'Welfare foundation for progressive taxation and bottom-quintile transfers.' },
+  { name: '3. Law of Diminishing Returns', theory: 'Neoclassical Growth Theory (Solow Model)', theme: 'Long-Term Economic Growth & Productivity', rule: 'Adding variable factor (K or L) to fixed factors reduces marginal product (∂²Y/∂K² < 0).', policy: 'Shows why physical infrastructure booms stagnate without TFP innovation.' },
+  { name: '4. Law of Supply', theory: 'Theory of the Firm', theme: 'Microeconomic Foundations & Consumer Behavior', rule: '∂Qs/∂P > 0; higher prices cover rising marginal costs and incentivize capacity.', policy: 'Warns that statutory price ceilings without supply subsidies cause shortages.' },
+  { name: '5. Engel’s Law', theory: 'Behavioral Economic Theory', theme: 'Microeconomic Foundations & Consumer Behavior', rule: 'As household income rises, the food budget share falls (0 < η_I < 1).', policy: 'Food and utility inflation acts as a regressive tax on low-income deciles.' },
+  { name: '6. Okun’s Law', theory: 'The Neoclassical Synthesis', theme: 'Macroeconomic Output & Stabilization', rule: '(Y - Y*)/Y* ≈ -2.0(u - u*); 1% excess unemployment costs ~2% of Real GDP.', policy: 'Translates GDP growth forecasts into national employment targets.' },
+  { name: '7. Say’s Law', theory: 'The Neoclassical Synthesis', theme: 'Long-Term Economic Growth & Productivity', rule: 'Aggregate production generates commensurate factor income in long-run flex-price equilibrium.', policy: 'Guides long-run supply-side deregulation; superseded in short-run liquidity traps.' },
+  { name: '8. Gresham’s Law', theory: 'Monetarism (Quantity Theory of Money)', theme: 'Monetary Policy & Central Banking', rule: '"Bad money drives out good" under artificially fixed exchange rates.', policy: 'Explains hard-currency hoarding and parallel FX markets under unbacked pegs.' },
+  { name: '9. Law of One Price (LOOP)', theory: 'Theory of Comparative Advantage', theme: 'International Trade & Globalization', rule: 'Identical tradables sell for the same common-currency price (P_i = E * P*_i).', policy: 'Anchors PPP exchange rate valuation and CBAM border adjustments.' },
+  { name: '10. Hotelling’s Rule', theory: 'Theory of Global Public Goods', theme: 'Environmental Economics & Climate Policy', rule: 'Net shadow rent of an exhaustible resource rises at the real interest rate (ΔP_net/P_net = r).', policy: 'Governs sovereign resource extraction pacing and stranded-asset valuation.' },
+  { name: '11. Goodhart’s Law', theory: 'Rational Expectations Theory', theme: 'Financial Markets & Systemic Risk', rule: '"When a measure becomes a target, it ceases to be a good measure."', policy: 'Requires multi-indicator macroprudential stress tests over single-metric targets.' }
+];
+
+function switchTab(tabId, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  if (btn) btn.classList.add('active');
+  updateCalendarAgendaPreview();
+}
+
+function syncAllMetricsToRegion(code) {
+  const jur = JURISDICTIONS[code];
+  METRICS_DATA.forEach(m => {
+    const regVals = jur.metrics[m.id];
+    if (regVals) {
+      m.inputs.forEach(inp => {
+        if (regVals[inp.id] !== undefined) inp.val = regVals[inp.id];
+      });
+    }
+  });
+}
+
+function setJurisdiction(code, btn) {
+  currentJurisdiction = code;
+  document.querySelectorAll('.jur-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  const euBar = document.getElementById('euDispersionBar');
+  if (euBar) euBar.classList.toggle('active', code === 'EU');
+
+  const dispBanner = document.getElementById('euMemberDispersionBanner');
+  if (dispBanner) dispBanner.style.display = code === 'EU' ? 'block' : 'none';
+
+  const jur = JURISDICTIONS[code];
+  document.getElementById('tk-10y').textContent = jur.yield10y;
+  const src10yEl = document.getElementById('src-tk-10y');
+  if (src10yEl) src10yEl.textContent = getActiveSourceString('yield');
+
+  document.getElementById('jurIndicatorTitle').textContent = `Sovereign & Market Indicators // ${jur.name}`;
+  document.getElementById('jurBadgeTag').textContent = jur.short;
+  document.getElementById('thematicHeaderTitle').textContent = `Thematic Decision Matrix // ${jur.name}`;
+
+  syncAllMetricsToRegion(code);
+
+  const fxIdom = document.getElementById('fx-idom'), fxCds = document.getElementById('fx-cds');
+  if (fxIdom && fxCds) {
+    fxIdom.value = jur.policyRate;
+    fxCds.value = jur.cdsBps;
+    calcFXParity();
+  }
+
+  renderActiveMetric();
+  drawCurveSvg();
+  initLawsAndIndicators();
+  updateThematicSimulation();
+  renderThematicEngine();
+  updateCalendarAgendaPreview();
+}
+
+function resetActiveMetricToDefault() {
+  syncAllMetricsToRegion(currentJurisdiction);
+  renderActiveMetric();
+}
+
+function resetRegionIndicators() {
+  const jur = JURISDICTIONS[currentJurisdiction];
+  jur.indicators = [...jur.defaultIndicators];
+  initLawsAndIndicators();
+  renderThematicEngine();
+}
+
+function initMetrics() {
+  document.getElementById('metricSelectorList').innerHTML = METRICS_DATA.map((m, idx) => `
+    <button class="selector-btn ${idx === activeMetricIdx ? 'active' : ''}" onclick="selectMetric(${idx})">
+      <span>${m.name}</span><span class="selector-tag">CALC</span>
+    </button>`).join('');
+  renderActiveMetric();
+}
+
+function selectMetric(idx) { activeMetricIdx = idx; initMetrics(); updateCalendarAgendaPreview(); }
+
+function renderActiveMetric() {
+  const m = METRICS_DATA[activeMetricIdx];
+  const srcText = getActiveSourceString('metrics');
+  const controlsHtml = m.inputs.map(inp => `
+    <div class="control-group">
+      <label>${inp.label}
+        <span class="val-stack">
+          <span class="val-display" id="lbl-${inp.id}">${inp.val}</span>
+          <span class="src-sub" id="src-inp-${inp.id}">${srcText}</span>
+        </span>
+      </label>
+      <input type="range" id="inp-${inp.id}" min="${inp.min}" max="${inp.max}" step="${inp.step}" value="${inp.val}" oninput="updateMetricCalc()">
+    </div>`).join('');
+  document.getElementById('metricWorkspace').innerHTML = `
+    <div class="hud-card" id="activeMetricCard">
+      <div class="hud-card-title">
+        <h2>${m.name}</h2>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <button class="outline-btn" onclick="resetActiveMetricToDefault()">RESET DAILY DEFAULT</button>
+          <button class="gold-btn" onclick="exportActiveMetricHUD()">EXPORT HUD BRIEF</button>
+        </div>
+      </div>
+      ${buildTaxonomyHTML(`metric-${m.id}`, m.theme, m.theory)}
+      <div class="formula-banner"><span>FORMULA // ${m.formula}</span><span style="font-size:11px;color:var(--gold);">${JURISDICTIONS[currentJurisdiction].short}</span></div>
+      <div class="grid-2">
+        <div><h4 style="font-family:var(--font-mono);font-size:11px;color:var(--cyan);margin-bottom:8px;text-transform:uppercase;">Parameter Telemetry Inputs</h4>${controlsHtml}</div>
+        <div>
+          <div class="hud-readout-box">
+            <div class="hud-readout-label">Computed Equilibrium / Policy Output</div>
+            <div class="hud-readout-value" id="metric-primary-out">--</div>
+            <span class="src-sub" id="metric-src-out" style="margin-bottom:6px;">${srcText}</span>
+            <div id="metric-sub-out" style="font-family:var(--font-mono);font-size:11.5px;color:var(--cyan);"></div>
+            <div class="hud-verdict" id="metric-verdict-out"></div>
+          </div>
+          <div class="info-box"><h4>Real-World Policy Case Scenario</h4><p>${m.scenario}</p></div>
+          <div class="info-box"><h4>Strategic Methodology &amp; Decision Application</h4><p>${m.methodology}</p></div>
+          <div class="info-box"><h4>Participant Data &amp; Stakeholder Justification</h4><p>${m.participants}</p></div>
+        </div>
+      </div>
+    </div>`;
+  updateMetricCalc();
+}
+
+function updateMetricCalc() {
+  const m = METRICS_DATA[activeMetricIdx], vals = {};
+  const srcText = getActiveSourceString('metrics');
+  m.inputs.forEach(inp => {
+    const el = document.getElementById(`inp-${inp.id}`);
+    vals[inp.id] = el ? parseFloat(el.value) : inp.val;
+    const lbl = document.getElementById(`lbl-${inp.id}`);
+    if (lbl) lbl.textContent = vals[inp.id];
+    const srcEl = document.getElementById(`src-inp-${inp.id}`);
+    if (srcEl) srcEl.textContent = srcText;
+  });
+  const res = m.compute(vals);
+  document.getElementById('metric-primary-out').textContent = res.primary;
+  document.getElementById('metric-sub-out').textContent = res.sub;
+  document.getElementById('metric-verdict-out').textContent = res.verdict;
+  const outSrcEl = document.getElementById('metric-src-out');
+  if (outSrcEl) outSrcEl.textContent = srcText;
+  updateCalendarAgendaPreview();
+}
+
+function initCurves(filterText = '') {
+  document.getElementById('curveSelectorList').innerHTML = CURVES_DATA.map((c, idx) => {
+    if (filterText && !c.name.toLowerCase().includes(filterText.toLowerCase()) && !c.theory.toLowerCase().includes(filterText.toLowerCase())) return '';
+    return `<button class="selector-btn ${idx === activeCurveIdx ? 'active' : ''}" onclick="selectCurve(${idx})"><span>${c.name}</span><span class="selector-tag">${c.cat}</span></button>`;
+  }).join('');
+  renderActiveCurve();
+}
+
+function filterCurves() { initCurves(document.getElementById('curveSearch').value); }
+function selectCurve(idx) { activeCurveIdx = idx; initCurves(document.getElementById('curveSearch').value); updateCalendarAgendaPreview(); }
+
+function renderActiveCurve() {
+  const c = CURVES_DATA[activeCurveIdx];
+  const srcText = getActiveSourceString('metrics');
+  document.getElementById('curveWorkspace').innerHTML = `
+    <div class="hud-card" id="activeCurveCard">
+      <div class="hud-card-title">
+        <h2>${c.name}</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="outline-btn" onclick="document.getElementById('curveShockSlider').value=0; drawCurveSvg();">RESET DEFAULT</button>
+          <button class="outline-btn" onclick="exportCurveSVG()">EXPORT SVG</button>
+          <button class="gold-btn" onclick="exportActiveCurveBrief()">EXPORT HUD BRIEF</button>
+        </div>
+      </div>
+      ${buildTaxonomyHTML(`curve-${c.id}`, c.theme, c.theory)}
+      <div class="grid-2">
+        <div class="svg-hud-container">
+          <svg class="hud-plot" id="curveSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 320"></svg>
+          <div class="control-group" style="width:100%;margin-top:10px;margin-bottom:0;">
+            <label>Parameter Telemetry Inputs // ${c.paramLabel}
+              <span class="val-stack">
+                <span class="val-display" id="curve-shock-lbl">0</span>
+                <span class="src-sub" id="curve-slider-src">${srcText}</span>
+              </span>
+            </label>
+            <input type="range" id="curveShockSlider" min="-40" max="40" step="2" value="0" oninput="drawCurveSvg()">
+          </div>
+        </div>
+        <div>
+          <div class="info-box"><h4>HUD Geometric Architecture &amp; Equilibrium Logic</h4><p>${c.desc}</p></div>
+          <div class="info-box"><h4>Applied Policy Scenario (${JURISDICTIONS[currentJurisdiction].short})</h4><p>${c.scenario}</p></div>
+          <div class="hud-readout-box" style="margin-top:12px;">
+            <div class="hud-readout-label">Equilibrium Readout</div>
+            <div class="hud-readout-value" id="curve-eq-readout" style="font-size:21px;">E0: ${JURISDICTIONS[currentJurisdiction].short} Equilibrium</div>
+            <span class="src-sub" id="curve-eq-src" style="margin-bottom:6px;">${srcText}</span>
+            <div class="hud-verdict" id="curve-verdict-readout">Adjust the Parameter Telemetry Input slider to simulate shifts on the HUD plot.</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  drawCurveSvg();
+}
+
+function drawCurveSvg() {
+  const c = CURVES_DATA[activeCurveIdx], slider = document.getElementById('curveShockSlider');
+  if (!slider) return;
+  const s = parseFloat(slider.value);
+  document.getElementById('curve-shock-lbl').textContent = (s > 0 ? `+${s}` : s);
+  const srcText = getActiveSourceString(c.type === 'yield' ? 'yield' : 'metrics');
+  const eqSrcEl = document.getElementById('curve-eq-src');
+  if (eqSrcEl) eqSrcEl.textContent = srcText;
+  const slSrcEl = document.getElementById('curve-slider-src');
+  if (slSrcEl) slSrcEl.textContent = srcText;
+
+  const svg = document.getElementById('curveSvg');
+  let html = `<rect width="460" height="320" fill="#04070e"/><line x1="50" y1="275" x2="430" y2="275" stroke="#4a607a" stroke-width="2"/><line x1="50" y1="25" x2="50" y2="275" stroke="#4a607a" stroke-width="2"/><text x="240" y="305" fill="#94a3b8" font-family="monospace" font-size="10.5" text-anchor="middle">QUANTITY / OUTPUT / TIME HORIZON (${JURISDICTIONS[currentJurisdiction].short})</text><text x="16" y="155" fill="#94a3b8" font-family="monospace" font-size="10.5" text-anchor="middle" transform="rotate(-90 16 155)">PRICE / RATE / COST</text>`;
+  if (c.type === 'ppf') {
+    html += `<path d="M 50 75 Q 250 75 350 275" fill="none" stroke="#4a607a" stroke-width="2" stroke-dasharray="5,5"/><path d="M 50 ${75 - s*0.6} Q ${250 + s*1.1} ${75 - s*0.6} ${350 + s*1.1} 275" fill="none" stroke="#00e5ff" stroke-width="3"/><circle cx="${210 + s*0.6}" cy="${135 - s*0.4}" r="6" fill="#f5b041"/><text x="${222 + s*0.6}" y="${132 - s*0.4}" fill="#f5b041" font-family="monospace" font-size="11">Efficient Frontier</text>`;
+  } else if (c.type === 'lorenz') {
+    html += `<line x1="50" y1="275" x2="400" y2="40" stroke="#10b981" stroke-width="2" stroke-dasharray="4,4"/><path d="M 50 275 Q ${260 - s*1.5} ${265 - s*1.5} 400 40" fill="rgba(245,176,65,0.12)" stroke="#f5b041" stroke-width="3"/><text x="165" y="130" fill="#10b981" font-family="monospace" font-size="11">45° Equality Line</text>`;
+  } else if (c.type === 'laffer') {
+    const tx = 225 + s * 3, ty = 70 + Math.pow((tx - 225)/7, 2);
+    html += `<path d="M 50 275 Q 225 -135 400 275" fill="none" stroke="#00e5ff" stroke-width="3"/><line x1="225" y1="40" x2="225" y2="275" stroke="#f5b041" stroke-dasharray="4,4"/><circle cx="${tx}" cy="${Math.min(270, ty)}" r="7" fill="#f43f5e"/><text x="105" y="55" fill="#10b981" font-family="monospace" font-size="10">Arithmetic</text><text x="265" y="55" fill="#f43f5e" font-family="monospace" font-size="10">Prohibitive</text>`;
+  } else if (c.type === 'solow') {
+    html += `<line x1="50" y1="275" x2="400" y2="65" stroke="#f43f5e" stroke-width="2.5"/><path d="M 50 275 Q 150 ${70 - s*1.2} 410 ${95 - s*1.2}" fill="none" stroke="#10b981" stroke-width="3"/><path d="M 50 275 Q 150 30 410 40" fill="none" stroke="#00e5ff" stroke-width="2" stroke-dasharray="4,4"/><text x="315" y="55" fill="#00e5ff" font-family="monospace" font-size="11">Output f(k)</text><text x="315" y="90" fill="#f43f5e" font-family="monospace" font-size="11">(δ+n+g)k</text>`;
+  } else if (c.type === 'clim_dmg') {
+    const cx = 240 + s * 2.5, cy = 270 - Math.pow((cx - 50)/22, 2);
+    html += `<path d="M 50 270 Q 260 260 400 45" fill="none" stroke="#f43f5e" stroke-width="3"/><circle cx="${cx}" cy="${Math.max(45, cy)}" r="6" fill="#f5b041"/>`;
+  } else if (c.type === 'gametree') {
+    html = `<rect width="460" height="320" fill="#04070e"/><circle cx="90" cy="160" r="18" fill="#111a2e" stroke="#f5b041" stroke-width="2"/><text x="90" y="164" fill="#fff" font-family="monospace" font-size="11" text-anchor="middle">N1</text><line x1="108" y1="150" x2="220" y2="85" stroke="#10b981" stroke-width="2"/><line x1="108" y1="170" x2="220" y2="235" stroke="#f43f5e" stroke-width="2"/><circle cx="235" cy="80" r="16" fill="#111a2e" stroke="#00e5ff" stroke-width="2"/><circle cx="235" cy="240" r="16" fill="#111a2e" stroke="#00e5ff" stroke-width="2"/><line x1="251" y1="75" x2="340" y2="50" stroke="#10b981" stroke-width="2"/><line x1="251" y1="85" x2="340" y2="115" stroke="#f43f5e" stroke-width="2"/><line x1="251" y1="235" x2="340" y2="205" stroke="#10b981" stroke-width="2"/><line x1="251" y1="245" x2="340" y2="270" stroke="#f43f5e" stroke-width="2"/><text x="348" y="54" fill="#10b981" font-family="monospace" font-size="11">Coop (${(10+s*0.1).toFixed(1)}, ${(10+s*0.1).toFixed(1)})</text><text x="348" y="274" fill="#f43f5e" font-family="monospace" font-size="11">Defect (4, 4)</text>`;
+  } else if (c.type === 'qe') {
+    const h = 150 + s * 1.5;
+    html += `<rect x="95" y="${275 - h}" width="110" height="${h}" fill="rgba(0,229,255,0.22)" stroke="#00e5ff" stroke-width="2"/><rect x="255" y="${275 - h}" width="110" height="${h}" fill="rgba(245,176,65,0.22)" stroke="#f5b041" stroke-width="2"/><text x="150" y="${265 - h}" fill="#00e5ff" font-family="monospace" font-size="11" text-anchor="middle">ASSETS: BONDS</text><text x="310" y="${265 - h}" fill="#f5b041" font-family="monospace" font-size="11" text-anchor="middle">LIAB: RESERVES</text>`;
+  } else if (c.type === 'yield') {
+    const shortY = 185 - s * 2.2;
+    html += `<path d="M 70 ${shortY} Q 210 140 400 105" fill="none" stroke="#f5b041" stroke-width="3"/><circle cx="70" cy="${shortY}" r="5" fill="#00e5ff"/><circle cx="400" cy="105" r="5" fill="#10b981"/><text x="315" y="95" fill="#10b981" font-family="monospace" font-size="11">10Y (${JURISDICTIONS[currentJurisdiction].yield10y})</text>`;
+  } else {
+    const shift = s * 1.2;
+    html += `<line x1="80" y1="60" x2="380" y2="250" stroke="#4a607a" stroke-width="2" stroke-dasharray="4,4"/><line x1="${80 + shift}" y1="60" x2="${380 + shift}" y2="250" stroke="#00e5ff" stroke-width="3"/><line x1="80" y1="250" x2="380" y2="60" stroke="#10b981" stroke-width="3"/>${(c.type === 'asad' || c.type === 'phillips') ? `<line x1="230" y1="35" x2="230" y2="275" stroke="#f5b041" stroke-width="2" stroke-dasharray="6,4"/>` : ''}<circle cx="${230 + shift/2}" cy="${155 - shift*0.31}" r="6" fill="#f5b041"/><text x="${242 + shift/2}" y="${153 - shift*0.31}" fill="#fff" font-family="monospace" font-size="11">E* (${(100+s*0.5).toFixed(0)}, ${(50+s*0.3).toFixed(0)})</text>`;
+  }
+  svg.innerHTML = html;
+  document.getElementById('curve-eq-readout').textContent = s === 0 ? `E0: ${JURISDICTIONS[currentJurisdiction].short} Equilibrium` : `E1: Policy Shock (${s > 0 ? '+' : ''}${s} Units)`;
+}
+
+function initLawsAndIndicators() {
+  const jur = JURISDICTIONS[currentJurisdiction];
+  document.getElementById('indicatorsContainer').innerHTML = INDICATOR_META.map((ind, i) => {
+    const indSrc = getActiveSourceString('indicator', i);
+    return `
+    <div class="info-box" id="ind-card-${i}" style="padding:11px 13px;margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
+        <strong style="color:#fff;font-size:13px;">${ind.name}</strong>
+        <div class="val-stack">
+          <input type="text" class="ind-edit-input" value="${jur.indicators[i]}" onchange="JURISDICTIONS[currentJurisdiction].indicators[${i}] = this.value; renderThematicEngine();" />
+          <span class="src-sub">${indSrc}</span>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:8px;">${ind.note}</p>
+      ${buildTaxonomyHTML(`ind-${i}`, ind.theme, ind.theory)}
+    </div>`;
+  }).join('');
+
+  document.getElementById('lawsContainer').innerHTML = LAWS_DATA.map((l, i) => `
+    <div class="info-box" id="law-card-${i}" style="padding:11px 13px;margin-bottom:10px;">
+      <strong style="color:#fff;font-size:13.5px;display:block;margin-bottom:3px;">${l.name}</strong>
+      <p style="font-family:var(--font-mono);font-size:11.5px;color:var(--cyan);margin-bottom:3px;">Rule: ${l.rule}</p>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:8px;">Application: ${l.policy}</p>
+      ${buildTaxonomyHTML(`law-${i}`, l.theme, l.theory)}
+    </div>`).join('');
+}
+
+const FX_CARDS = [
+  { pair: 'DXY (US Dollar Index)', val: '102.19', chg: 'ICE Basket', driver: 'Fed-ECB Rate Differential & Safe-Haven Flows', src: 'ice futures u.s. / federal reserve h.10' },
+  { pair: 'EUR / USD Spot', val: '1.1146', chg: 'ECB Reference', driver: 'Eurozone Terms of Trade & UIP Spread', src: 'ecb eurofxref / frankfurter api' },
+  { pair: 'USD / JPY Spot', val: '157.97', chg: 'BoJ / MoF', driver: 'US-JP Yield Spread & Intervention Zone', src: 'bank of japan tokyo spot / ecb' },
+  { pair: 'USD / SGD Spot', val: '1.3210', chg: 'MAS S$NEER', driver: 'Singapore Exchange-Rate-Centered Policy', src: 'monetary authority of singapore (mas) / ecb' },
+  { pair: 'USD / CHF & GBP / USD', val: '0.8640 / 1.2985', chg: 'SNB & BoE', driver: 'Swiss Safe-Haven & UK Gilt Carry', src: 'snb zurich & bank of england / frankfurter' },
+  { pair: 'EU Carbon (EUA) / Brent', val: '€88.76 / $114.37', chg: 'CBAM & Energy', driver: 'MAC Curve Abatement & Energy SRAS Shock', src: 'ice endex eua / ice brent crude futures' }
+];
+
+function initFX() {
+  const todayStr = getTodayISO();
+  document.getElementById('fxTelemetryCards').innerHTML = FX_CARDS.map((f, i) => `
+    <div class="info-box" style="margin-bottom:0;">
+      <h4>${f.pair}</h4>
+      <div style="font-family:var(--font-mono);font-size:21px;font-weight:800;color:#fff;margin:4px 0 2px 0;" id="fxc-val-${i}">${f.val}</div>
+      <span class="src-sub" id="fxc-src-${i}" style="margin-bottom:5px;">default (${todayStr}) &bull; src: ${f.src}</span>
+      <div style="font-family:var(--font-mono);font-size:10.5px;color:var(--gold);">${f.chg} // ${f.driver}</div>
+    </div>`).join('');
+  calcFXParity();
+}
+
+function calcFXParity() {
+  const idom = parseFloat(document.getElementById('fx-idom').value), ifor = parseFloat(document.getElementById('fx-ifor').value);
+  const spot = parseFloat(document.getElementById('fx-spot').value), cds = parseFloat(document.getElementById('fx-cds').value);
+  document.getElementById('fx-idom-val').textContent = idom.toFixed(2) + '%';
+  document.getElementById('fx-ifor-val').textContent = ifor.toFixed(2) + '%';
+  document.getElementById('fx-spot-val').textContent = spot.toFixed(4);
+  document.getElementById('fx-cds-val').textContent = cds + ' bps';
+
+  const todayStr = getTodayISO();
+  const idomSrcEl = document.getElementById('src-fx-idom');
+  if (idomSrcEl) idomSrcEl.textContent = getActiveSourceString('policy');
+  const iforSrcEl = document.getElementById('src-fx-ifor');
+  if (iforSrcEl) iforSrcEl.textContent = `default (${todayStr}) • src: federal reserve fomc`;
+  const spotSrcEl = document.getElementById('src-fx-spot');
+  if (spotSrcEl) spotSrcEl.textContent = `default (${todayStr}) • src: ecb eurofxref / frankfurter`;
+  const cdsSrcEl = document.getElementById('src-fx-cds');
+  if (cdsSrcEl) cdsSrcEl.textContent = getActiveSourceString('cds');
+
+  const fwd = spot * ((1 + ifor / 100) / (1 + idom / 100)) * (1 - (cds / 10000) * 0.5);
+  const diffBps = Math.round((idom - ifor) * 100);
+  document.getElementById('fx-forward-out').textContent = fwd.toFixed(4);
+  const fwdSrcEl = document.getElementById('src-fx-forward');
+  if (fwdSrcEl) fwdSrcEl.textContent = `default (${todayStr}) • src: uip model / ecb / bis / dtcc`;
+  document.getElementById('fx-carry-spread').textContent = `Rate Differential (${JURISDICTIONS[currentJurisdiction].short} vs. US): ${diffBps >= 0 ? '+' : ''}${diffBps} bps | CDS: ${cds} bps`;
+  document.getElementById('fx-verdict').textContent = cds > 200 ? 'FISCAL DOMINANCE WARNING: Sovereign CDS > 200 bps risks capital flight.' : diffBps > 0 ? `POSITIVE CARRY INFLOW (+${diffBps} bps): Supports domestic currency appreciation.` : `NEGATIVE RATE DIFFERENTIAL (${diffBps} bps): Implies forward spot adjustment per UIP.`;
+  updateCalendarAgendaPreview();
+}
+
+function applyThematicCaseScenario() {
+  const key = document.getElementById('th-case-preset').value;
+  const sc = CASE_SCENARIOS[key] || CASE_SCENARIOS.s_default;
+  document.getElementById('th-lev-g').value = sc.levG;
+  document.getElementById('th-lev-i').value = sc.levI;
+  document.getElementById('th-lev-c').value = sc.levC;
+  document.getElementById('th-theme-filter').value = sc.themeIdx;
+  syncThemePills();
+  updateThematicSimulation();
+  renderThematicEngine();
+}
+
+function resetThematicToDailyDefault() {
+  document.getElementById('th-case-preset').value = 's_default';
+  applyThematicCaseScenario();
+}
+
+function updateThematicSimulation() {
+  const key = document.getElementById('th-case-preset')?.value || 's_default';
+  const sc = CASE_SCENARIOS[key] || CASE_SCENARIOS.s_default;
+  const g = parseInt(document.getElementById('th-lev-g')?.value || '0', 10);
+  const i = parseInt(document.getElementById('th-lev-i')?.value || '0', 10);
+  const c = parseInt(document.getElementById('th-lev-c')?.value || '0', 10);
+
+  document.getElementById('th-lev-g-val').textContent = (g >= 0 ? `+${g}` : g);
+  document.getElementById('th-lev-i-val').textContent = `${i >= 0 ? '+' : ''}${i} bps`;
+  document.getElementById('th-lev-c-val').textContent = (c >= 0 ? `+${c}` : c);
+
+  const srcMetrics = getActiveSourceString('metrics');
+  const srcPolicy = getActiveSourceString('policy');
+  if (document.getElementById('src-th-g')) document.getElementById('src-th-g').textContent = srcMetrics;
+  if (document.getElementById('src-th-i')) document.getElementById('src-th-i').textContent = srcPolicy;
+  if (document.getElementById('src-th-c')) document.getElementById('src-th-c').textContent = `default (${getTodayISO()}) • src: ngfs / ice eua / solow tfp`;
+
+  const gdpShift = (g * 0.04 - (i / 100) * 0.35 + c * 0.02).toFixed(2);
+  const infShift = (g * 0.025 - (i / 100) * 0.45 - c * 0.015).toFixed(2);
+  const jur = JURISDICTIONS[currentJurisdiction];
+
+  document.getElementById('th-case-readout').innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;margin-bottom:4px;">
+      <strong style="color:var(--gold);font-family:var(--font-mono);font-size:12px;">${sc.title} (${jur.short})</strong>
+      <div class="val-stack">
+        <span style="font-family:var(--font-mono);font-size:11px;color:var(--emerald);">ΔGDP: ${gdpShift >= 0 ? '+' : ''}${gdpShift}% | ΔInflation: ${infShift >= 0 ? '+' : ''}${infShift}%</span>
+        <span class="src-sub">${srcMetrics}</span>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--text-main);">${sc.summary}</p>
+  `;
+}
+
+function getThematicCatalog(scopeMode) {
+  const jur = JURISDICTIONS[currentJurisdiction], app = jur.applicable, catalog = [];
+  METRICS_DATA.forEach((m, idx) => {
+    if (scopeMode === 'REGIONAL' && !app.metrics.includes(m.id)) return;
+    catalog.push({ type: 'METRIC', idx, typeLabel: 'METRIC / FORMULA', name: m.name, theme: m.theme, theory: m.theory, spec: m.formula, srcSub: getActiveSourceString('metrics'), detail: m.scenario });
+  });
+  CURVES_DATA.forEach((c, idx) => {
+    if (scopeMode === 'REGIONAL' && !app.curves.includes(c.id)) return;
+    catalog.push({ type: 'CURVE', idx, typeLabel: 'HUD DIAGRAM / CURVE', name: c.name, theme: c.theme, theory: c.theory, spec: `Axis // ${c.paramLabel}`, srcSub: getActiveSourceString('metrics'), detail: c.scenario });
+  });
+  LAWS_DATA.forEach((l, idx) => {
+    if (scopeMode === 'REGIONAL' && !app.laws.includes(idx)) return;
+    catalog.push({ type: 'LAW', idx, typeLabel: 'ECONOMIC LAW', name: l.name, theme: l.theme, theory: l.theory, spec: l.rule, srcSub: `default (${getTodayISO()}) • src: foundational empirical doctrine`, detail: l.policy });
+  });
+  INDICATOR_META.forEach((ind, idx) => {
+    if (scopeMode === 'REGIONAL' && !app.indicators.includes(idx)) return;
+    catalog.push({ type: 'INDICATOR', idx, typeLabel: `INDICATOR (${jur.short})`, name: ind.name, theme: ind.theme, theory: ind.theory, spec: jur.indicators[idx], srcSub: getActiveSourceString('indicator', idx), detail: ind.note });
+  });
+  return catalog;
+}
+
+function initThematicControls() {
+  const presetSel = document.getElementById('th-case-preset');
+  const groups = [...new Set(Object.values(CASE_SCENARIOS).map(s => s.group))];
+  presetSel.innerHTML = groups.map(g => `<optgroup label="${g}">` +
+    Object.entries(CASE_SCENARIOS).filter(([_, v]) => v.group === g)
+      .map(([k, v]) => `<option value="${k}">${v.title}</option>`).join('') +
+    `</optgroup>`).join('');
+
+  const themes = Object.keys(THEMATIC_ENGINE_DATA);
+  document.getElementById('th-theme-filter').innerHTML = `<option value="ALL">All 7 Economic Themes</option>` +
+    themes.map((t, i) => `<option value="${i}">${THEMATIC_ENGINE_DATA[t].code} // ${t}</option>`).join('');
+  const theories = Object.keys(THEORY_DOCTRINES);
+  document.getElementById('th-theory-filter').innerHTML = `<option value="ALL">All 15 Foundational Theories</option>` +
+    theories.map((th, i) => `<option value="${i}">T-${String(i+1).padStart(2,'0')} // ${th}</option>`).join('');
+  document.getElementById('thThemePills').innerHTML = `<button class="th-pill active" data-t="ALL" onclick="selectThemePill('ALL')">ALL THEMES</button>` +
+    themes.map((t, i) => `<button class="th-pill" data-t="${i}" onclick="selectThemePill('${i}')">${THEMATIC_ENGINE_DATA[t].code}: ${t}</button>`).join('');
+  updateThematicSimulation();
+  renderThematicEngine();
+}
+
+function selectThemePill(val) {
+  document.getElementById('th-theme-filter').value = val;
+  syncThemePills();
+  renderThematicEngine();
+}
+
+function syncThemePills() {
+  const v = document.getElementById('th-theme-filter').value;
+  document.querySelectorAll('.th-pill').forEach(p => p.classList.toggle('active', p.getAttribute('data-t') === v));
+}
+
+function renderCardHTML(item) {
+  return `<div class="artifact-card">
+    <div class="artifact-card-top">
+      <div class="artifact-meta-row">
+        <span class="badge-type badge-${item.type}">${item.typeLabel}</span>
+        <span class="theory-tag-inline">${item.theory}</span>
+      </div>
+      <strong style="color:#fff;font-size:13.5px;line-height:1.35;">${item.name}</strong>
+      <div class="artifact-spec-box">
+        <div>${item.spec}</div>
+        <span class="src-sub">${item.srcSub || ''}</span>
+      </div>
+      <p style="font-size:12px;color:var(--text-dim);line-height:1.4;">${item.detail}</p>
+    </div>
+    <div class="artifact-footer">
+      <span style="font-family:var(--font-mono);font-size:10px;color:var(--gold);font-weight:700;">${JURISDICTIONS[currentJurisdiction].short}</span>
+      <button type="button" class="launch-hud-btn" onclick="launchInHud('${item.type}', ${item.idx})">LAUNCH IN HUD &rarr;</button>
+    </div>
+  </div>`;
+}
+
+function renderThematicEngine() {
+  const groupMode = document.getElementById('th-group-mode').value;
+  const themeIdx = document.getElementById('th-theme-filter').value;
+  const theoryIdx = document.getElementById('th-theory-filter').value;
+  const scopeMode = document.getElementById('th-scope-filter').value;
+  const searchQ = (document.getElementById('th-search').value || '').toLowerCase().trim();
+
+  const themeKeys = Object.keys(THEMATIC_ENGINE_DATA);
+  const theoryKeys = Object.keys(THEORY_DOCTRINES);
+  const selectedThemeName = themeIdx === 'ALL' ? 'ALL' : themeKeys[parseInt(themeIdx, 10)];
+  const selectedTheoryName = theoryIdx === 'ALL' ? 'ALL' : theoryKeys[parseInt(theoryIdx, 10)];
+
+  const items = getThematicCatalog(scopeMode).filter(item => {
+    if (selectedThemeName !== 'ALL' && item.theme !== selectedThemeName) return false;
+    if (selectedTheoryName !== 'ALL' && item.theory !== selectedTheoryName) return false;
+    if (searchQ && !`${item.name} ${item.theme} ${item.theory} ${item.spec} ${item.detail}`.toLowerCase().includes(searchQ)) return false;
+    return true;
+  });
+
+  document.getElementById('th-count-badge').textContent = `${items.length} ${JURISDICTIONS[currentJurisdiction].short} INSTRUMENTS`;
+  const ws = document.getElementById('thematicWorkspace');
+  if (!items.length) {
+    ws.innerHTML = `<div class="info-box"><p>No instruments match the current filter criteria. Select "All 7 Economic Themes" or clear the search box.</p></div>`;
+    return;
+  }
+
+  let html = '';
+  if (groupMode === 'theme_theory') {
+    [...new Set(items.map(i => i.theme))].forEach(thName => {
+      const tData = THEMATIC_ENGINE_DATA[thName];
+      const thItems = items.filter(i => i.theme === thName);
+      const regScenario = tData.scenarios[currentJurisdiction];
+      const subTheories = [...new Set(thItems.map(i => i.theory))];
+      html += `<div class="th-section">
+        <div class="hud-card-title" style="margin-bottom:10px;">
+          <div>
+            <h3 style="color:var(--gold);font-family:var(--font-mono);font-size:15.5px;">${tData.code} // ${thName.toUpperCase()} (${JURISDICTIONS[currentJurisdiction].short})</h3>
+            <p style="font-size:12.5px;color:#fff;margin-top:4px;"><strong>Regional Policy Application:</strong> ${regScenario}</p>
+          </div>
+          <span class="selector-tag">${thItems.length} TOOLS</span>
+        </div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--gold);text-transform:uppercase;margin-bottom:4px;">4 Strategic Dimensions for Data-Driven Decision Making:</div>
+        <div class="dim-grid">
+          ${tData.dimensions.map(d => `<div class="dim-box"><h5>${d.title}</h5><p>${d.text}</p></div>`).join('')}
+        </div>
+        ${subTheories.map(theo => {
+          const doc = THEORY_DOCTRINES[theo];
+          const cItems = thItems.filter(i => i.theory === theo);
+          return `<div style="background:#080d18;border:1px solid #18253f;border-radius:8px;padding:13px;margin-bottom:12px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:6px;">
+              <strong style="color:var(--violet);font-family:var(--font-mono);font-size:12.5px;">Foundational Theory: ${theo}</strong>
+              <span style="font-family:var(--font-mono);font-size:10.5px;color:var(--gold);">${cItems.length} Instruments</span>
+            </div>
+            <p style="font-size:11.8px;color:var(--text-dim);margin-bottom:8px;"><strong>Mainstream Policy Doctrine:</strong> ${doc.doctrine}</p>
+            <div class="artifact-grid">${cItems.map(renderCardHTML).join('')}</div>
+          </div>`;
+        }).join('')}
+      </div>`;
+    });
+  } else if (groupMode === 'theory_theme') {
+    [...new Set(items.map(i => i.theory))].forEach(theo => {
+      const doc = THEORY_DOCTRINES[theo];
+      const theoItems = items.filter(i => i.theory === theo);
+      html += `<div class="th-section">
+        <div class="hud-card-title">
+          <div>
+            <h3 style="color:var(--violet);font-family:var(--font-mono);">${theo.toUpperCase()}</h3>
+            <p style="font-size:12px;color:var(--text-main);margin-top:3px;"><strong>Core Mechanism:</strong> ${doc.core}</p>
+            <p style="font-size:12px;color:var(--gold);margin-top:2px;"><strong>Mainstream Policy Doctrine:</strong> ${doc.doctrine}</p>
+          </div>
+          <span class="selector-tag">${theoItems.length} INSTRUMENTS</span>
+        </div>
+        <div class="artifact-grid">${theoItems.map(renderCardHTML).join('')}</div>
+      </div>`;
+    });
+  } else {
+    [
+      { key: 'METRIC', title: '01 // QUANTITATIVE METRICS & FORMULAS' },
+      { key: 'CURVE', title: '02 // INTERACTIVE HUD DIAGRAMS & CURVES' },
+      { key: 'LAW', title: '03 // FOUNDATIONAL ECONOMIC LAWS' },
+      { key: 'INDICATOR', title: `04 // SOVEREIGN & MARKET INDICATORS (${JURISDICTIONS[currentJurisdiction].short})` }
+    ].forEach(cls => {
+      const cItems = items.filter(i => i.type === cls.key);
+      if (!cItems.length) return;
+      html += `<div class="th-section"><div class="hud-card-title"><h3 style="color:var(--gold);font-family:var(--font-mono);">${cls.title}</h3><span class="selector-tag">${cItems.length} ITEMS</span></div><div class="artifact-grid">${cItems.map(renderCardHTML).join('')}</div></div>`;
+    });
+  }
+  ws.innerHTML = html;
+}
+
+function launchInHud(type, idx) {
+  const gShock = parseInt(document.getElementById('th-lev-g')?.value || '0', 10);
+  if (type === 'METRIC') {
+    activeMetricIdx = idx;
+    initMetrics();
+    switchTab('tab-metrics', document.getElementById('tabbtn-metrics'));
+    const card = document.getElementById('activeMetricCard');
+    if (card) { card.scrollIntoView({ behavior: 'smooth', block: 'start' }); card.classList.add('hud-flash'); setTimeout(() => card.classList.remove('hud-flash'), 1800); }
+  } else if (type === 'CURVE') {
+    activeCurveIdx = idx;
+    const searchEl = document.getElementById('curveSearch');
+    if (searchEl) searchEl.value = '';
+    initCurves('');
+    const slider = document.getElementById('curveShockSlider');
+    if (slider && gShock !== 0) {
+      slider.value = Math.max(-40, Math.min(40, Math.round(gShock / 2) * 2));
+      drawCurveSvg();
+    }
+    switchTab('tab-curves', document.getElementById('tabbtn-curves'));
+    const card = document.getElementById('activeCurveCard');
+    if (card) { card.scrollIntoView({ behavior: 'smooth', block: 'start' }); card.classList.add('hud-flash'); setTimeout(() => card.classList.remove('hud-flash'), 1800); }
+  } else if (type === 'LAW') {
+    switchTab('tab-laws', document.getElementById('tabbtn-laws'));
+    const el = document.getElementById(`law-card-${idx}`);
+    if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.classList.add('hud-flash'); setTimeout(() => el.classList.remove('hud-flash'), 1800); }
+  } else if (type === 'INDICATOR') {
+    switchTab('tab-laws', document.getElementById('tabbtn-laws'));
+    const el = document.getElementById(`ind-card-${idx}`);
+    if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.classList.add('hud-flash'); setTimeout(() => el.classList.remove('hud-flash'), 1800); }
+  }
+}
+
+function updateDailyTickerSourceLabels(refDateStr) {
+  const d = refDateStr || getTodayISO();
+  const map = {
+    'src-tk-dxy': `default (${d}) • src: ice futures / fed h.10`,
+    'src-tk-eur': `default (${d}) • src: ecb eurofxref / frankfurter`,
+    'src-tk-jpy': `default (${d}) • src: boj tokyo spot / ecb`,
+    'src-tk-sgd': `default (${d}) • src: mas s$neer / frankfurter`,
+    'src-tk-10y': getActiveSourceString('yield'),
+    'src-tk-vix': `default (${d}) • src: cboe vix / eurex vstoxx`,
+    'src-tk-eua': `default (${d}) • src: ice endex / eex eu ets`
+  };
+  Object.entries(map).forEach(([id, txt]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = txt.toLowerCase();
+  });
+  FX_CARDS.forEach((f, idx) => {
+    const el = document.getElementById(`fxc-src-${idx}`);
+    if (el) el.textContent = `default (${d}) • src: ${f.src}`.toLowerCase();
+  });
+}
+
+async function autoSyncAllTelemetry() {
+  const badge = document.getElementById('syncBadge');
+  const todayStr = getTodayISO();
+  badge.textContent = todayStr;
+  updateDailyTickerSourceLabels(todayStr);
+  try {
+    const res = await fetch('https://api.frankfurter.app/latest?from=USD&to=EUR,JPY,GBP,CAD,SEK,CHF,SGD');
+    const data = await res.json();
+    if (data && data.rates) {
+      const eurUsd = (1 / data.rates.EUR).toFixed(4), usdJpy = data.rates.JPY.toFixed(2);
+      const usdSgd = data.rates.SGD ? data.rates.SGD.toFixed(4) : '1.3210';
+      const usdChf = data.rates.CHF.toFixed(4), gbpUsd = (1 / data.rates.GBP).toFixed(4);
+      const dxyLive = (50.14348112 * Math.pow(data.rates.EUR, 0.576) * Math.pow(data.rates.JPY, 0.136) * Math.pow(data.rates.GBP, 0.119) * Math.pow(data.rates.CAD, 0.091) * Math.pow(data.rates.SEK, 0.042) * Math.pow(data.rates.CHF, 0.036)).toFixed(2);
+      document.getElementById('tk-dxy').textContent = dxyLive;
+      document.getElementById('tk-eur').textContent = eurUsd;
+      document.getElementById('tk-jpy').textContent = usdJpy;
+      document.getElementById('tk-sgd').textContent = usdSgd;
+      document.getElementById('fxc-val-0').textContent = dxyLive;
+      document.getElementById('fxc-val-1').textContent = eurUsd;
+      document.getElementById('fxc-val-2').textContent = usdJpy;
+      document.getElementById('fxc-val-3').textContent = usdSgd;
+      document.getElementById('fxc-val-4').textContent = `${usdChf} / ${gbpUsd}`;
+      const spotSlider = document.getElementById('fx-spot');
+      if (spotSlider) { spotSlider.value = eurUsd; calcFXParity(); }
+      badge.textContent = todayStr;
+      updateDailyTickerSourceLabels(todayStr);
+    }
+  } catch (err) {
+    badge.textContent = todayStr;
+    updateDailyTickerSourceLabels(todayStr);
+  }
+}
+
+function downloadFile(filename, content, mimeType = 'text/plain;charset=utf-8') {
+  const blob = new Blob([content], { type: mimeType }), a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+function exportActiveMetricHUD() {
+  const m = METRICS_DATA[activeMetricIdx];
+  downloadFile(`KP_HUD_Metric_${m.id}_${currentJurisdiction}_${getTodayISO()}.md`, `# Pocket_C-SuitePoliecon_Notepad // HUD Metric Brief\n**Date:** ${getTodayISO()}\n**Architect:** KALLIOPI PAPADOPOULOU\n**Region:** ${JURISDICTIONS[currentJurisdiction].name}\n**Metric:** ${m.name} (${m.formula})\n**Output:** ${document.getElementById('metric-primary-out').textContent}\n**Source:** ${getActiveSourceString('metrics')}\n**Verdict:** ${document.getElementById('metric-verdict-out').textContent}\n\n© 2026 Kalliopi Papadopoulou. All Rights Reserved.`, 'text/markdown');
+}
+
+function exportCurveSVG() {
+  downloadFile(`KP_HUD_Curve_${CURVES_DATA[activeCurveIdx].id}_${currentJurisdiction}_${getTodayISO()}.svg`, new XMLSerializer().serializeToString(document.getElementById('curveSvg')), 'image/svg+xml');
+}
+
+function exportActiveCurveBrief() {
+  const c = CURVES_DATA[activeCurveIdx];
+  downloadFile(`KP_HUD_Diagram_${c.id}_${currentJurisdiction}_${getTodayISO()}.md`, `# Pocket_C-SuitePoliecon_Notepad // HUD Diagram Brief\n**Date:** ${getTodayISO()}\n**Architect:** KALLIOPI PAPADOPOULOU\n**Region:** ${JURISDICTIONS[currentJurisdiction].name}\n**Diagram:** ${c.name}\n**Theme:** ${c.theme} | **Theory:** ${c.theory}\n**Source:** ${getActiveSourceString('metrics')}\n\n© 2026 Kalliopi Papadopoulou. All Rights Reserved.`, 'text/markdown');
+}
+
+function exportIndicatorsCSV() {
+  const jur = JURISDICTIONS[currentJurisdiction];
+  const csv = 'Indicator,Value,Daily_Date,Source,Theme,Theory\n' + INDICATOR_META.map((m, i) => `"${m.name}","${jur.indicators[i]}","${getTodayISO()}","${getActiveSourceString('indicator', i)}","${m.theme}","${m.theory}"`).join('\n');
+  downloadFile(`KP_Sovereign_Indicators_${currentJurisdiction}_${getTodayISO()}.csv`, csv, 'text/csv');
+}
+
+function exportFXBrief() {
+  downloadFile(`KP_FX_Telemetry_${currentJurisdiction}_${getTodayISO()}.md`, `# Quant Finance & FX Telemetry Brief (${getTodayISO()})\n**Architect:** KALLIOPI PAPADOPOULOU\n**Region:** ${JURISDICTIONS[currentJurisdiction].name}\n**12M UIP Forward:** ${document.getElementById('fx-forward-out').textContent}\n**Source:** ${getActiveSourceString('policy')}\n**Verdict:** ${document.getElementById('fx-verdict').textContent}\n\n© 2026 Kalliopi Papadopoulou. All Rights Reserved.`, 'text/markdown');
+}
+
+function exportThematicMatrixBrief() {
+  const items = getThematicCatalog('REGIONAL');
+  downloadFile(`KP_Thematic_Decision_Matrix_${currentJurisdiction}_${getTodayISO()}.md`, `# Thematic Decision Matrix (${JURISDICTIONS[currentJurisdiction].name} // ${getTodayISO()})\n**Architect:** KALLIOPI PAPADOPOULOU\n\n` + items.map(i => `* **[${i.typeLabel}] ${i.name}** — ${i.theme} (${i.theory}): \`${i.spec}\` _(${i.srcSub})_`).join('\n') + `\n\n© 2026 Kalliopi Papadopoulou. All Rights Reserved.`, 'text/markdown');
+}
+
+function exportFullExecutiveDossier() {
+  const jur = JURISDICTIONS[currentJurisdiction];
+  downloadFile(`KP_Executive_Dossier_${currentJurisdiction}_${getTodayISO()}.md`, `# EXECUTIVE DOSSIER // Pocket_C-SuitePoliecon_Notepad (${getTodayISO()})\n**KALLIOPI PAPADOPOULOU**\n**Region:** ${jur.name}\n\n` + INDICATOR_META.map((ind, i) => `* **${ind.name}:** ${jur.indicators[i]} _(${getActiveSourceString('indicator', i)})_`).join('\n') + `\n\n© 2026 Kalliopi Papadopoulou. All Rights Reserved.`, 'text/markdown');
+}
+
+function updateCalendarAgendaPreview() {
+  const jur = JURISDICTIONS[currentJurisdiction], m = METRICS_DATA[activeMetricIdx], c = CURVES_DATA[activeCurveIdx];
+  const previewEl = document.getElementById('cal-agenda-preview');
+  if (previewEl) {
+    previewEl.value = `MACHINE: Pocket_C-SuitePoliecon_Notepad (${getTodayISO()})\nLEAD: Kalliopi Papadopoulou (Macroeconomic Strategy • C-Suite Advisory • Quantitative Finance • AI Architecture)\nREGION: ${jur.name}\nACTIVE METRIC: ${m.name} (${document.getElementById('metric-primary-out')?.textContent || ''}) [${getActiveSourceString('metrics')}]\nACTIVE DIAGRAM: ${c.name}\nFX TELEMETRY: DXY ${document.getElementById('tk-dxy')?.textContent} | EUR/USD ${document.getElementById('tk-eur')?.textContent} | USD/JPY ${document.getElementById('tk-jpy')?.textContent} | USD/SGD ${document.getElementById('tk-sgd')?.textContent}\n\n© 2026 Kalliopi Papadopoulou. All Rights Reserved.`;
+  }
+}
+
+function getCalendarDates() {
+  const start = new Date(`${document.getElementById('cal-date').value || '2026-11-05'}T${document.getElementById('cal-time').value || '10:00'}:00`);
+  const end = new Date(start.getTime() + parseInt(document.getElementById('cal-duration').value || '60', 10) * 60000);
+  const fmt = (d) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+  return { startUTC: fmt(start), endUTC: fmt(end) };
+}
+
+function openGoogleCalendar() {
+  const { startUTC, endUTC } = getCalendarDates();
+  window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(document.getElementById('cal-title').value)}&dates=${startUTC}/${endUTC}&details=${encodeURIComponent(document.getElementById('cal-agenda-preview').value)}&location=${encodeURIComponent(document.getElementById('cal-loc').value)}`, '_blank', 'noopener');
+}
+
+function downloadICSFile() {
+  const { startUTC, endUTC } = getCalendarDates();
+  const ics = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Kalliopi Papadopoulou//Pocket_C-SuitePoliecon_Notepad//EN','BEGIN:VEVENT',`DTSTART:${startUTC}`,`DTEND:${endUTC}`,`SUMMARY:${document.getElementById('cal-title').value}`,`DESCRIPTION:${document.getElementById('cal-agenda-preview').value.replace(/\n/g, '\\n')}`,`LOCATION:${document.getElementById('cal-loc').value}`,'END:VEVENT','END:VCALENDAR'].join('\r\n');
+  downloadFile(`KP_Poliecon_Executive_Briefing_${getTodayISO()}.ics`, ics, 'text/calendar;charset=utf-8');
+}
+
+window.onload = () => {
+  initEUMemberDispersionBar();
+  setEUMemberState('EU_SUPRA');
+  syncAllMetricsToRegion('EU');
+  initMetrics();
+  initCurves();
+  initLawsAndIndicators();
+  initFX();
+  initThematicControls();
+  setJurisdiction('EU', document.querySelector('.jur-btn.active'));
+  autoSyncAllTelemetry();
+};
+</script>
+</body>
+</html>
